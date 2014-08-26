@@ -1,0 +1,24 @@
+# Dependencies
+markdown:         redcarpet
+highlighter:      pygments
+
+# Permalinks
+permalink:        pretty
+
+# Setup
+title:            "Busy Beaver"
+tagline:          "Kali's tape"
+description:      'More or less relevant results of long-lasting computations in a geeky brain'
+url:              http://kali.github.io
+
+author:
+  name:           'Mathieu Poumeyrol'
+  url:              http://kali.github.io
+
+paginate:         5
+
+# Custom vars
+version:          2.0.0
+
+#github:
+#  repo:           https://github.com/poole/hyde

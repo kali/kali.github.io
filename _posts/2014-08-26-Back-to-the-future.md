@@ -5,6 +5,8 @@ title: Back to the future
 
 Here we go, again. Starting a blog. So 2003...
 
+<a href="https://www.flickr.com/photos/garryknight/7468560478" title="Back to the Future by Garry Knight, on Flickr"><img src="https://farm8.staticflickr.com/7264/7468560478_5af440a0c9_z.jpg" width="640" height="424" alt="Back to the Future"></a>
+
 These are interesting times for me. I've never been in a position where I actually do not know what
 I'll be doing in a few months — or even days. And it's the first time also when I can enjoy some months of total 
 freedom in relative financial comfort and just have to think, or not, about what to do next.

@@ -6,13 +6,13 @@ title: Playing with Rust
 Why Rust
 ========
 
-Among various items last spring at the developer conference, Apple announced the 
+Among various items, last spring at the developer conference, Apple announced the 
 release of a new language to succeed the venerable Objective C. As a Scala user, I was
 amazed at how similar the first Swift samples Apple shared with the world
 [looked familiar](https://leverich.github.io/swiftislikescala/).
 
-It's certainly not a consequence. After years of being ostracized, functional programming
-makes a big come-back and industry acknowledge its benefits by making functional and imperative
+It's certainly not a coincidence. After years of being ostracized, functional programming
+makes a big come-back and industry acknowledges its benefits by making functional and imperative
 style co-existing in new languages. To my knowledge, Scala is the first successful language
 designed around the idea of style cohabitation.
 
@@ -25,11 +25,11 @@ When Apple released Swift, I felt very frustrated that no statement was made abo
 availability on alternative platforms. But it prompted me to have a look at the LLVM
 ecosystem and that's how I came to give some attention to Rust.
 
-Rust is designed by the Mozilla Research group. Its design has evolved a lot since its first
+Rust is designed by the Mozilla Research group. It has evolved a lot since its first
 release and it still has a very experimental and shaky feel. Input and feedback from the
 community is welcomed, and many big changes are still occurring, up to important syntax
-changes. So Rust is not ready from prime time, but has some specificity that are interesting,
-if not (yet ?) practical.
+modification. So Rust is not ready from prime time, but has some specificity that are
+interesting, if not (yet ?) practical.
 
 Rust acknowledges the need for local functional support, as Swift does, but where Swift
 relies on runtime management of reference life cycle, Rust choose to make it a part of the
@@ -40,7 +40,7 @@ the developer does the right thing or running a GC, rust is able to
 to decorate the references in the code to express his intentions about ownership and
 mutability of references. The compiler will check that the manipulation are correct, and
 generate code that will be (in theory at least) as compact and efficient as a C compiler
-would, and no runtime witchery (aka GC) will be needed either.
+would, with no runtime witchery (aka GC) required.
 
 Of course, it comes with a price...
 
@@ -102,16 +102,18 @@ So far, so good. Now for a hard coded machine definition. It's actually a
 
 OK, not too bad. *vec![...]* is a bit weird: *!* at the end of an identifier denotes
 a macro. The rest would look quite the same in scala with case classes. One difference
-though: the nested structure are *included*, not referenced here.
+though: the nested structure are *included*, not referenced.
 
 Now things start to get a bit funky. I do not want to implement the Turing Machine in
 functional immutable style: it is feasible, but copying the whole tape at each iteration
-feels bad. So the Machine will a mutable structure. In Rust, a struct is not intrinsically
-mutable: mutability is acquired through reference decoration.
+feels inefficient. So the Machine will a mutable structure. In Rust, a struct is not
+intrinsically mutable or immutable: mutability is acquired through reference decoration.
 
 Of course, I want a machine to know its definition (the "program" it's running) and
 want to share this program among several machine, so I need "definition" to be a
-reference and not a copy of the whole structure. And the machine variable will be mutable.
+reference and not a copy of the whole structure. The machine variable will be mutable,
+but the definition will be immutable: mutability spreads to included structure, but not
+through references.
 
 {% highlight Rust %}
 struct Machine {
@@ -159,4 +161,20 @@ I did not have to decorate the structure instantiation and variables in the main
 compiler managed to validate what I was doing with that. This whole thing felt quite weird,
 particularly because the "fix" does not seem to provide that much additional information to
 the compiler. Maybe it's one of these case where this decoration should be assumed as a default
-by the compiler when nothing is provided by the developper. I guess this comes with the territory.
+by the compiler when nothing is provided by the developer. I guess this comes with the territory.
+
+There was a bit more of this mumbo-jumbo required to make work the "impl" part of my code.
+
+impl<'a> Machine<'a> {
+    fn dump(&self) -> String {
+        ...
+    }
+    fn step(&mut self) {
+        ...
+    }
+}
+
+I struggled a bit in a few places to manage to get the code working, and I'm not really happy with
+it (it should be waaaaaay dryer) but this post is already too long :)
+
+The code is [here](https://github.com/kali/rust-sandbox/blob/5d1be995d5194f3b6d2bdb0da70933defd2720f0/busy-beaver/beaver.rs).

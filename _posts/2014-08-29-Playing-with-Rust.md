@@ -168,6 +168,7 @@ by the compiler when nothing is provided by the developer. I guess this comes wi
 
 There was a bit more of this mumbo-jumbo required to make work the "impl" part of my code.
 
+{% highlight Rust %}
 impl<'a> Machine<'a> {
     fn dump(&self) -> String {
         ...
@@ -176,6 +177,7 @@ impl<'a> Machine<'a> {
         ...
     }
 }
+{% endhighlight %}
 
 I struggled a bit in a few places to manage to get the code working, and I'm not really happy with
 it (it should be waaaaaay dryer) but this post is already too long :)

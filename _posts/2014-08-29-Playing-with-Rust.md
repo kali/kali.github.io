@@ -4,7 +4,8 @@ title: Playing with Rust
 ---
 
 Why Rust
-========
+--------
+
 
 Among various items, last spring at the developer conference, Apple announced the 
 release of a new language to succeed the venerable Objective C. As a Scala user, I was
@@ -24,6 +25,8 @@ is happening in the language area.
 When Apple released Swift, I felt very frustrated that no statement was made about its
 availability on alternative platforms. But it prompted me to have a look at the LLVM
 ecosystem and that's how I came to give some attention to Rust.
+
+<a href="https://www.flickr.com/photos/aigle_dore/5677012485" title="Rust by Moyan Brenn, on Flickr"><img src="https://farm6.staticflickr.com/5104/5677012485_f585f48689_z.jpg" width="640" height="399" alt="Rust"></a>
 
 Rust is designed by the Mozilla Research group. It has evolved a lot since its first
 release and it still has a very experimental and shaky feel. Input and feedback from the
@@ -45,7 +48,7 @@ would, with no runtime witchery (aka GC) required.
 Of course, it comes with a price...
 
 Some code
-=========
+---------
 
 I chose to give a shot at a Turing Machine implementation. If I manage that, I can do
 anything, right?

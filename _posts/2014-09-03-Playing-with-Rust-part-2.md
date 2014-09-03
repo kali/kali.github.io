@@ -77,7 +77,7 @@ MachineDefinition, but now that I have understood this part, the compiler messag
 rustc, ./beaver... 1 second ! -g, Instruments...
 
 <a href="/assets/2014-09-03-Instruments-2.png">
-    <img src="/assets/2014-09-03-Instruments-2.png" alt="First profile" height="300px"></img>
+    <img src="/assets/2014-09-03-Instruments-2.png" alt="First profile" height="200px"></img>
 </a>
 
 And... not only there is nothing obvious to look at anymore, but the "weird" stuff is all over the place now.

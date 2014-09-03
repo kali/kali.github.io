@@ -84,3 +84,5 @@ And... not only there is nothing obvious to look at anymore, but the "weird" stu
 The step() method appears twice, so does get_mut() inside step(). I assume the various method inlining is confusing
 the profiler, so I guess my next step would be to go check out the LLVM IR to see what is generated, but... not
 today.
+
+Bottom line is, Instruments profiling helped me go from four times as slow as C to two times.

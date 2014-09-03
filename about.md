@@ -12,7 +12,7 @@ difficult problem to solve for non-trivial machines.
 I have no intention of getting a shot at computability problems, but I'd like to keep track and/or share of a few
 things that are worth more than 140 characters.
 
-I am Mathieu Poumeyrol, a thirty-something geek based in Paris. I like designing softaware architecture, 
+I am Mathieu Poumeyrol, a thirty-something geek based in Paris. I like designing software architecture, 
 writing code, hunting bugs and performance or reliability issues (basically, solving puzzles). Over the last
 years, I've mostly play with puzzles in scala, mongodb, ruby, and hadoop.
 

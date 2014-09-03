@@ -12,13 +12,13 @@ I'll be doing in a few months — or even days. And it's the first time also whe
 freedom in relative financial comfort and just have to think, or not, about what to do next.
 To be honest, I find that both exhilarating and frightening.
 
-I've only been employed by two companies so far. The first one hired my as a summer intern before my scholarship was
-over in 1999, and I chose to came back to work there "for real" later. It was a small — 20 persons or so — development
+I've only been employed by two companies so far. The first one hired me as a summer intern before my scholarship was
+over in 1999, and I chose to come back to work there "for real" later. It was a small — 20 persons or so — development
 company that was working for bigger companies and institutions on a project by project basis.
 Despite a continuous struggle to make a living, we managed, on several occasions, to answer to client requirements
 with ambitious, risky, but highly rewarding approaches. I got a chance to manage a four persons — plus me — team of
 great developers and tackle issues like ad hoc data stores tailored for specific requirements.
-From the look of it, and what I've been told, several components we designed developed at that time are still
+From the look of it, and what I've been told, several components we designed and developed at that time are still
 in production a decade or so later.
 
 At the end of 2008, I chose to quit and join Fotonauts/Fotopedia.

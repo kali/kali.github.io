@@ -146,21 +146,24 @@ about 4GB. That's fine, my laptop has 16GB. Note that I chose not to write
 the result to Disk in which I differ from the bigdata benchmark.
 
 Rust structures are lean. Rust HashMap will have some overhead, but nothing
-unreasonable. For the prefixes, I can use [u8;12] fixed arrays. They will
-strictly no overhead. Another option would be an actual String or Vec 
+unreasonable. For the prefixes, I can use [u8;12] fixed arrays. No hidden 
+cost. Another option would be an actual String or Vec 
 (resizable vector) which could be slightly easier to manipulate but they
-would inccur more overhead (Vec is a structure with a pointer to the data,
-a capacity and an actual size. String is more or less the same).
+would incur some overhead: Vec is a structure with a pointer to the actual
+data, a capacity and an actual size. String is more or less the same. Three 
+words, 24 bytes. Bigger than the data itself. Let's not go there.
 
-I could be way more aggressive on the keys. They are ipv4 adresses prefix, 
+Actually, I could be way more aggressive on the keys. They are ipv4 adresses
+prefix, 
 so each byte can only be a figure or a dot... this should take half a byte,
 not one byte. Let's keep that for later.
 
 As my laptop has 4 hyperthreaded cores, I need to parallelize the computation
 somehow. I picked a work stealing queue, enqueued a job for each input file.
-Each job scans a file and perform a local aggregation on its own hashmap.
-Once it's done it drains its hashmap in a big shared HashMap. And that's more
-or less it.
+Each job scans a file and performs a local aggregation on its own hashmap.
+Once it's done it drains its own little HashMap in a big shared HashMap.
+
+And that's more or less it.
 
 cargo build, run, wait, look at the progress bar for a while.
 
@@ -173,9 +176,9 @@ cargo build --release, run, wait, look at the progress bar.
 Smile.
 
 Drum roll... 633s! We are already doing better than a 5-nodes hive cluster.
-ON A LAPTOP, playing some David Bowie songs to cover its fans noise,
-plugged to a 4K retina display, running Chrome with a few dozen tabs,
-about as many iTerm panes. So not particularly quiet.
+ON A LAPTOP, playing David Bowie songs to cover its fans noise,
+plugged to a 4K display, running Chrome with a few dozen tabs,
+and bout as many iTerm panes. So not particularly quiet.
 
 That was for the A variant. The C variant runs in 666 (!) seconds.
 

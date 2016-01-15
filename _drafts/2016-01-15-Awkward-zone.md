@@ -11,9 +11,9 @@ Not necessarily huge
 datasets, but often in the "awkward zone", where a scripting language show its
 limits, but firing up a 20-node cluster does not feel right.
 
-Some things have changed sice the early 2000s. Getting access to hundreds or
-thousands or computer for a few hours at an affordable rate moved from
-the science-fictionr realm to a commonplace occurence. We have also access to 
+Some things have changed since the early 2000s. Getting access to hundreds or
+thousands of computer for a few hours at an affordable rate moved from
+the science-fiction realm to a commonplace occurence. We have also access to 
 a variety of software tools to distribute computation on these clusters.
 
 So distributed processing is now both reasonably affordable and easy, providing
@@ -65,7 +65,7 @@ SSD are here, and they are here to stay. The second game changer is a software
 one, and it may just be wishful thinking on my part.
 
 Rust is a new language, aiming at being a modern and viable alternative to 
-C and C++ in the "system programming language" niche. Mozilla.org, ond of the
+C and C++ in the "system programming language" niche. Mozilla.org, one of the
 driving forces behind Rust, is bored with C++ and wants a new language to
 write a new Mozilla.
 
@@ -103,7 +103,7 @@ Four queries are included in the bench:
 
 I will focus on the "group-by" query.
 
-The input is a XXX GB table, called "UserVisits" and representing anonymoused 
+The input is a 30GB table, called "UserVisits", representing anonymised
 visits on a web site. The query uses two fields (sourceIP and adRevenue) among
 a dozen. The query groups visits by a prefix of the sourceIP, and sum
 adRevenue on these groups. There are three variants for the query with a 
@@ -124,6 +124,8 @@ on this:
 |   2A    |   8|   2,067,313 |      730s |        83s |
 |   2B    |  10|  31,348,913 |      764s |       100s |
 |   2C    |  12| 253,890,330 |      730s |       132s |
+
+This is running on a cluster made of five 8cores/64GB nodes on EC2.
 
 I have not shown the best-performing solution in the above table. The reason
 is, as the benchmark page explains, RedShift uses a columned input. As the
@@ -178,7 +180,7 @@ Smile.
 Drum roll... 633s! We are already doing better than a 5-nodes hive cluster.
 ON A LAPTOP, playing David Bowie songs to cover its fans noise,
 plugged to a 4K display, running Chrome with a few dozen tabs,
-and bout as many iTerm panes. So not particularly quiet.
+and about as many iTerm panes. So not particularly quiet.
 
 That was for the A variant. The C variant runs in 666 (!) seconds.
 
@@ -186,7 +188,8 @@ That was for the A variant. The C variant runs in 666 (!) seconds.
 
 As I have hinted several times, I hope there are more iterations coming. 
 I will show some code (once it's cleaned), and do more stuff: play with
-various input formats, distribute the computation using timely dataflow
+various input formats, distribute the computation using 
+[timely dataflow](https://github.com/frankmcsherry/timely-dataflow)
 on a cluster. This part is done, I just need to write about it :)
 
 And we'll get way better than these 633s.

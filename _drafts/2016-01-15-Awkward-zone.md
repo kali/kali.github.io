@@ -3,17 +3,19 @@ layout: post
 title: Awkward Zone
 ---
 
+<img src="../assets/tool-1076326_1920.jpg" alt"four wrenches">
+
 ## Rust, BigData and my laptop
 
 I have been toying and working with BigData tools for years. Data preparation,
-index building, logs processing, Wikipedia graph analysis... 
+index building, logs processing, Wikipedia graph analysis...
 Not necessarily huge
 datasets, but often in the "awkward zone", where a scripting language show its
 limits, but firing up a 20-node cluster does not feel right.
 
 Some things have changed since the early 2000s. Getting access to hundreds or
 thousands of computer for a few hours at an affordable rate moved from
-the science-fiction realm to a commonplace occurence. We have also access to 
+the science-fiction realm to a commonplace occurence. We have also access to
 a variety of software tools to distribute computation on these clusters.
 
 So distributed processing is now both reasonably affordable and easy, providing
@@ -22,7 +24,7 @@ a very acceptable answer to most problems that would have landed in the
 
 An unfortunate consequence of making scalability accessible is... we may have,
 as an industry, become lazy. If we have a scalable solution to a problem, it is
-tempting to choose the easy way, just throw more hardware at the problem 
+tempting to choose the easy way, just throw more hardware at the problem
 without trying too hard getting a more efficient solution.
 
 It's a bit of a shame.
@@ -33,7 +35,7 @@ From a thermodynamic point of view, computers are heaters.
 
 Also... well I think it's fun. Constraints generates creativity.
 
-So I'll spend some time trying to explore (again) that good old "awkward zone" 
+So I'll spend some time trying to explore (again) that good old "awkward zone"
 that EC2 and Spark have more or less anhilated.
 
 Let's try and do some BigData on a laptop.
@@ -46,7 +48,7 @@ something new to the table.
 ### Affordable SSD
 
 We have been stuck with the 5-to-15-millisecond latency of spin-disk for years.
-Today the huge empty zone in the speed and availibility memory chart that 
+Today the huge empty zone in the speed and availibility memory chart that
 spanned between spin disks and RAM is closing with SSD — and a few other more
 exotic things. This is a huge thing. Most of the reasoning for data processing
 in the previous decade was structured by this strict dichotomy. Everything big
@@ -64,20 +66,20 @@ the place.
 SSD are here, and they are here to stay. The second game changer is a software
 one, and it may just be wishful thinking on my part.
 
-Rust is a new language, aiming at being a modern and viable alternative to 
+Rust is a new language, aiming at being a modern and viable alternative to
 C and C++ in the "system programming language" niche. Mozilla.org, one of the
 driving forces behind Rust, is bored with C++ and wants a new language to
 write a new Mozilla.
 
-As a language, Rust share characteristics with Scala and Swift, featuring a 
+As a language, Rust share characteristics with Scala and Swift, featuring a
 strong trait-based type system, integration of functionnal idioms in an overall
 imperative and object language. But Rust has a unique approach to resource
-management: the implicit ownership and borrowing of resources that we have 
+management: the implicit ownership and borrowing of resources that we have
 always worked with have been made explicit in the language. So basically, the
-Rust developper can write code that will be as efficient as C++ code, as 
+Rust developper can write code that will be as efficient as C++ code, as
 safe as Java, in a language supporting high-level idioms.
 
-Yes, Rust wants it all. The price is a steep learning curve. Progresses 
+Yes, Rust wants it all. The price is a steep learning curve. Progresses
 are being
 made to help (error message improvments, smarter borrow-checker) but
 making friend with the borrow-checker will dominate the Rust beginner
@@ -88,10 +90,10 @@ stays a regular occurence when trying to write very abstract code.
 ## The BigData benchmark / Query 2
 
 So to exercice Rust and SSD in the awkward zone, I looked around for
-examples with documented performance and I found 
+examples with documented performance and I found
 [just that](https://amplab.cs.berkeley.edu/benchmark/).
 
-It focuses on comparing different SQL-like batch processing engines on a 
+It focuses on comparing different SQL-like batch processing engines on a
 5-nodes EC2 cluster: spark SQL, hive, etc. Redshift, AWS proprietary
 engine is also included in the bench.
 
@@ -106,13 +108,13 @@ I will focus on the "group-by" query.
 The input is a 30GB table, called "UserVisits", representing anonymised
 visits on a web site. The query uses two fields (sourceIP and adRevenue) among
 a dozen. The query groups visits by a prefix of the sourceIP, and sum
-adRevenue on these groups. There are three variants for the query with a 
+adRevenue on these groups. There are three variants for the query with a
 8, 10 or 12 bytes prefix length (X). Note that the variant only impacts the
 size of the result, not the input.
 
 ```SQL
   SELECT SUBSTR(sourceIP, 1, X), SUM(adRevenue)
-    FROM uservisits 
+    FROM uservisits
 GROUP BY SUBSTR(sourceIP, 1, X)
 ```
 
@@ -141,22 +143,22 @@ Now one of the interesting things about doing something like that by hand
 is, there is no framework to dictate how to architect or organize the
 computation. You're free.
 
-The result is a table containing 2M or 254M records, each record being 
+The result is a table containing 2M or 254M records, each record being
 a pair (prefix, amount). Our worst case will be a 12bytes prefix, amount a
 32-bits float. So each record is 16bytes. Our theorical result size is
 about 4GB. That's fine, my laptop has 16GB. Note that I chose not to write
 the result to Disk in which I differ from the bigdata benchmark.
 
 Rust structures are lean. Rust HashMap will have some overhead, but nothing
-unreasonable. For the prefixes, I can use [u8;12] fixed arrays. No hidden 
-cost. Another option would be an actual String or Vec 
+unreasonable. For the prefixes, I can use [u8;12] fixed arrays. No hidden
+cost. Another option would be an actual String or Vec
 (resizable vector) which could be slightly easier to manipulate but they
 would incur some overhead: Vec is a structure with a pointer to the actual
-data, a capacity and an actual size. String is more or less the same. Three 
+data, a capacity and an actual size. String is more or less the same. Three
 words, 24 bytes. Bigger than the data itself. Let's not go there.
 
 Actually, I could be way more aggressive on the keys. They are ipv4 adresses
-prefix, 
+prefix,
 so each byte can only be a figure or a dot... this should take half a byte,
 not one byte. Let's keep that for later.
 
@@ -186,9 +188,9 @@ That was for the A variant. The C variant runs in 666 (!) seconds.
 
 ## Teaser
 
-As I have hinted several times, I hope there are more iterations coming. 
+As I have hinted several times, I hope there are more iterations coming.
 I will show some code (once it's cleaned), and do more stuff: play with
-various input formats, distribute the computation using 
+various input formats, distribute the computation using
 [timely dataflow](https://github.com/frankmcsherry/timely-dataflow)
 on a cluster. This part is done, I just need to write about it :)
 

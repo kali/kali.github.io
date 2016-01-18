@@ -3,6 +3,8 @@ layout: post
 title: Awkward Zone
 ---
 
+# Awkward Zone
+
 <img src="../assets/tool-1076326_1920.jpg" alt"four wrenches">
 
 ## Rust, BigData and my laptop
@@ -14,8 +16,9 @@ datasets, but often in the "awkward zone", where a scripting language show its
 limits, but firing up a 20-node cluster does not feel right.
 
 Some things have changed since the early 2000s. Getting access to hundreds or
-thousands of computer for a few hours at an affordable rate moved from
-the science-fiction realm to a commonplace occurence. We have also access to
+thousands of computer for a few hours at an affordable rate was
+science-fiction. — Have you read _Permutation City_, by Greg Egan ? — 
+It's now a commonplace occurence. We have also access to
 a variety of software tools to distribute computation on these clusters.
 
 So distributed processing is now both reasonably affordable and easy, providing
@@ -33,7 +36,7 @@ The latest figures I could find about Internet energy impact put it somewhere
 between 3% and 10% of the global energy balance. And that's heat. Just heat.
 From a thermodynamic point of view, computers are heaters.
 
-Also... well I think it's fun. Constraints generates creativity.
+Also... well I think it's fun. And constraints generates creativity.
 
 So I'll spend some time trying to explore (again) that good old "awkward zone"
 that EC2 and Spark have more or less anhilated.
@@ -48,12 +51,13 @@ something new to the table.
 ### Affordable SSD
 
 We have been stuck with the 5-to-15-millisecond latency of spin-disk for years.
-Today the huge empty zone in the speed and availibility memory chart that
-spanned between spin disks and RAM is closing with SSD — and a few other more
-exotic things. This is a huge thing. Most of the reasoning for data processing
-in the previous decade was structured by this strict dichotomy. Everything big
+Charting memory speed and availibility was showing a huge empty zone between
+RAM and disks. This gap is now closing with SSD — and a few other more
+exotic contraptions. This is a huge thing. Most of the reasoning for data
+processing in the previous decade was structured by this strict dichotomy
+between fast memory and cheap memory. Everything big
 was I/O bound anyway. Purely sequential access was the only way to go. CPU were
-starved, so expensive compression was often a good option.
+usually starved, so expensive compression was often a good option.
 
 We have to reconsider the choices and compromises we did in the previous decade
 in the light of the SSD characteristics. It will take years. And SSD is just
@@ -63,7 +67,7 @@ the place.
 
 ### Rust
 
-SSD are here, and they are here to stay. The second game changer is a software
+SSDs are here, and they are here to stay. The second game changer is a software
 one, and it may just be wishful thinking on my part.
 
 Rust is a new language, aiming at being a modern and viable alternative to
@@ -81,11 +85,10 @@ safe as Java, in a language supporting high-level idioms.
 
 Yes, Rust wants it all. The price is a steep learning curve. Progresses
 are being
-made to help (error message improvments, smarter borrow-checker) but
-making friend with the borrow-checker will dominate the Rust beginner
+made to help (error message improvements, smarter borrow-checker) but
+making friend with the borrow-checker still dominates the Rust beginner
 experience. And having a difficult time negotiating with the borrow-checker
-stays a regular occurence when trying to write very abstract code.
-
+stays a regular occurence when trying to write abstract library code.
 
 ## The BigData benchmark / Query 2
 
@@ -103,7 +106,7 @@ Four queries are included in the bench:
 - join
 - external user-defined function
 
-I will focus on the "group-by" query.
+I will focus on the "group-by" query, called... Query 2. 
 
 The input is a 30GB table, called "UserVisits", representing anonymised
 visits on a web site. The query uses two fields (sourceIP and adRevenue) among
@@ -150,17 +153,19 @@ about 4GB. That's fine, my laptop has 16GB. Note that I chose not to write
 the result to Disk in which I differ from the bigdata benchmark.
 
 Rust structures are lean. Rust HashMap will have some overhead, but nothing
-unreasonable. For the prefixes, I can use [u8;12] fixed arrays. No hidden
+unreasonable. For the prefixes, I can use [u8;12] fixed arrays. That's just
+an array of 12 (unsigned) bytes. No hidden
 cost. Another option would be an actual String or Vec
-(resizable vector) which could be slightly easier to manipulate but they
+(a resizable vector) which could be slightly easier to manipulate but they
 would incur some overhead: Vec is a structure with a pointer to the actual
-data, a capacity and an actual size. String is more or less the same. Three
-words, 24 bytes. Bigger than the data itself. Let's not go there.
+buffer, plus two integer fields for buffer capacity and actual size.
+String is more or less the same. Three
+words, 24 bytes. Bigger than the usefull data itself. Let's not go there.
 
-Actually, I could be way more aggressive on the keys. They are ipv4 adresses
+Actually, I could be more aggressive on the keys. They are ipv4 adresses
 prefix,
 so each byte can only be a figure or a dot... this should take half a byte,
-not one byte. Let's keep that for later.
+not one byte. Let's keep that for later
 
 As my laptop has 4 hyperthreaded cores, I need to parallelize the computation
 somehow. I picked a work stealing queue, enqueued a job for each input file.
@@ -188,7 +193,8 @@ That was for the A variant. The C variant runs in 666 (!) seconds.
 
 ## Teaser
 
-As I have hinted several times, I hope there are more iterations coming.
+As I have hinted several times, I plan to detail more iterations in the
+coming weeks.
 I will show some code (once it's cleaned), and do more stuff: play with
 various input formats, distribute the computation using
 [timely dataflow](https://github.com/frankmcsherry/timely-dataflow)

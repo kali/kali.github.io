@@ -101,10 +101,10 @@ It focuses on comparing different SQL-like batch processing engines on a
 engine is also included in the bench.
 
 Four queries are included in the bench:
-- simple scan and filter
-- group-by
-- join
-- external user-defined function
+ - simple scan and filter
+ - group-by
+ - join
+ - external user-defined function
 
 I will focus on the "group-by" query, called... Query 2. 
 

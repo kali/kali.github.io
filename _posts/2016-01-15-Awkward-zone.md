@@ -5,7 +5,7 @@ title: Awkward Zone
 
 # Awkward Zone
 
-<img src="../assets/tool-1076326_1920.jpg" alt"four wrenches">
+<img src="../assets/tool-1076326_1920.jpg" alt"four wrenches" height="400px">
 
 ## Rust, BigData and my laptop
 

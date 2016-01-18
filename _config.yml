@@ -24,3 +24,7 @@ version:          2.0.0
 #  repo:           https://github.com/poole/hyde
 
 gems: [jekyll-paginate]
+
+redcarpet:
+    extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "tables", "strikethrough", "superscript", "with_toc_data"]
+

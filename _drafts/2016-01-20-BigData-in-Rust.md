@@ -58,18 +58,14 @@ Anyway, all this is a long way down the road from here.
 
 ## Introducing Azone
 
-So. I have actually crafted some code. It's not yet very
-reusable but some part could be made a library as a first step towards
-tools.
-
-Some parts of it actually predate this work on Query 2, giving hopes that
-there is room for reusability.
-
 The code is here: https://github.com/kali/dazone . The README gives
 instructions about how to run the bench.
 
-Let's have a look at Query 2:
+Let's have a look at simple runner Query 2:
 https://github.com/kali/dazone/blob/master/src/bin/query2_simple.rs
+
+The runner I actually use is query2.rs. It allows to tweak many parameters
+and strategies, but let's keep it simple.
 
 ```rust
 extern crate dazone;
@@ -92,7 +88,7 @@ fn main() {
 }
 ```
 
-Not too bad. Let's have a closer look.
+Let's have a closer look.
 
 ### Input, Data and BIBIs
 
@@ -205,9 +201,20 @@ and using 16 workers.
 The `converge()` call can be disregarded. Let's just print the number of
 groups to the console.
 
-All in all, this is not too bad. The fact I was able to reuse an existing
-map/reduce is a good sign this that part at least could be library material.
+### Thought on Resusability
+
+All in all, this is not too bad. 
+
+* the map/reduce part I was able to reuse so it is a good sign this that part 
+    at least could be library material
+* bibi_pod:
+    * assumes the target object is a RustDecodbable pod
+    * needs a well-defined file structure
+    * can be substituded by anything implementing the bibi trait
+* writting the POD is definitely data-specific, but not difficult
+* there is still quite a bit of plumbing in `query2_simple.rs`
 
 ## What's next
 
-Next time, we will have a look at import formats.
+Next time, we will have a look at input formats and how they affect the
+time.

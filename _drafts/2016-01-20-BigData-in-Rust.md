@@ -56,7 +56,7 @@ strategies:
 
 Anyway, all this is a long way down the road from here.
 
-## Introducing Azone
+## Introducing Dazone
 
 The code is here: https://github.com/kali/dazone . The README gives
 instructions about how to run the bench.

@@ -10,16 +10,16 @@ the developper from the framework constraints. For instance, one can choose
 to have such or such result in memory because it fits.
 
 It also allows the developper to make use of very compact types instead of a
-handful of generic purpoise ones.
+handful of generic purpose ones.
 
 But these are not choices you want to have to make all the time.
 
 Basically, what I have done so far is spent days — weeks literally — on a
 single SQL group-by query a data scientist would have crafted in less than
-half a munutes :)
+half a munite :)
 
 One of the things I'm trying to assess is what kind of tools would make
-sense to developpe as a longer term goal. I'm thinking DSL, or a SharkSQL
+sense to develop as a longer term goal. I'm thinking DSL, or a SharkSQL
 clone or...
 
 So now, as a developper, I
@@ -168,6 +168,15 @@ Iterator in that
 case was a bit expensive, so I introduced a Zero or One or Many enumeration.
 This is a terribly premature optimisation in our present case, but it predates
 work on Query2.
+
+`BYTES_8` is one of the types I had to make to deal with the 8-byte long
+string. Think of it as similar to SQL's CHAR(8). Now, Rust does not support
+generics parameterized by values: I can't have define `CHAR<length>` and use
+it with `CHAR<8>`. Macros are less a satisafactory solution, but that will 
+work.
+
+See https://github.com/kali/dazone/blob/master/src/short_bytes_array.rs if 
+you feel compelled to.
 
 ### Running it
 

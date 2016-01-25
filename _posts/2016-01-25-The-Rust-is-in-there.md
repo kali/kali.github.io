@@ -135,6 +135,7 @@ compression schemes and encoding formats. It also know where to read the
 files accordingly.
 
 As for its return value, it's actually:
+
 ```rust
 Box<Iterator<Item=Box<Iterator<Item=UserVisits>>>>
 ```

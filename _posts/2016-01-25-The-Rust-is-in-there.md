@@ -220,7 +220,7 @@ and using 16 workers.
 The `converge()` call can be disregarded. The last line prints the number of
 groups to the console.
 
-### Thought on Resusability
+### Thought on Reusability
 
 All in all, this is not too bad. 
 

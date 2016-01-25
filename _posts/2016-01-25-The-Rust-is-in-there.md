@@ -58,7 +58,7 @@ strategies:
 * ask the application developper or data scientist to provide hints
 * start with an optimistic memory strategy, and start spilling to disk
     when the dataset in memory gets too big
-* start with an optimistc memory strategy, restart with a disk strategy
+* start with an optimistic memory strategy, restart with a disk strategy
     when the dataset in memory gets too big
 
 Anyway, all this is a long way down the road from here.

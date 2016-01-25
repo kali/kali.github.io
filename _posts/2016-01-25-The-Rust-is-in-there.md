@@ -10,7 +10,7 @@ title: The Rust is in there
 
 Ok, I'm done. Promise.
 
-## What in there could be librarized ?
+## What in there could be librarized?
 
 In the previous post, I stated that not relying on a framework was freeing
 the developper from the framework constraints. For instance, one can choose

@@ -3,8 +3,6 @@ layout: post
 title: The Rust is in there
 ---
 
-# The Rust is in there
-
 <figure>
 <img src="/assets/X-Files-Computer.jpg" alt"This is not a rust file, Mulder." height="400px"/>
 <figcaption>This is not a rust file, Mulder.</figcaption>

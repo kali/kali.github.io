@@ -13,10 +13,10 @@ Ok, I'm done. Promise.
 ## What in there could be librarized?
 
 In the previous post, I stated that not relying on a framework was freeing
-the developper from the framework constraints. For instance, one can choose
+the developer from the framework constraints. For instance, one can choose
 to have such or such result in memory because it fits.
 
-It also allows the developper to make use of very compact types instead of a
+It also allows the developer to make use of very compact types instead of a
 handful of generic purpose ones.
 
 But these are not choices you want to have to make all the time.
@@ -29,7 +29,7 @@ One of the things I'm trying to assess is what kind of tools would make
 sense to develop as a longer term goal. I'm thinking DSL, or a SharkSQL
 clone or a notebook kernel, or whatever.
 
-So for now, as a developper, I perform high-level optimisations
+So for now, as a developer, I perform high-level optimisations
 manually. But I will try to stay in the realm
 of optimisations that a semi-automatic optimiser could find.
 
@@ -55,7 +55,7 @@ harder. I only knew the storage requirement because there were given in the
 paper, by somebody who already had the query run. We could imagine various
 strategies:
 
-* ask the application developper or data scientist to provide hints
+* ask the application developer or data scientist to provide hints
 * start with an optimistic memory strategy, and start spilling to disk
     when the dataset in memory gets too big
 * start with an optimistic memory strategy, restart with a disk strategy
@@ -147,7 +147,7 @@ file a chunk) and the lower level is the record. It is actually quite
 convenient to keep these two levels around. We load the data file by file, and
 we process it by chunk anyway.
 
-As for the Box bit, let's just ignore that for now. Seasoned Rust developpers
+As for the Box bit, let's just ignore that for now. Seasoned Rust developers
 will known why it's there.
 
 ### Map/Reduce

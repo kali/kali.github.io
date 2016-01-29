@@ -28,7 +28,7 @@ we manage very easily to read the files for our benchmark from disk in
 
 So we definitely have to look at what the CPUs are doing.
 
-<img src="/assets/2016-02-01-Instruments.png" alt"profile, showing gz and csv" height="400px">
+<img src="/assets/2016-02-01-Instruments.png" alt="profile, showing gz and csv" height="400px">
 
 Without trying to decipher too much out of it, the four or five top lines show
 a lot a time is spent in CSV and Zlib functions. More "decoding stuff" appears
@@ -72,6 +72,8 @@ to design and implement these kind of formats, so there are many competing
 options today, and it's a bit hard to guess which formats will still be
 around in a few years.
 
+## ProtoBuf and Cap'n Proto
+
 Then, we have schema-full formats. They require the developer to write a
 format specification (think IDL) that the encoder and decoder will use
 to read and write the data, freeing it of the redundancy that comes with
@@ -82,8 +84,26 @@ In the past decade, new formats have emerged from big organizations (Facebook
 and Google mostly) and were deemed relevant enough to get some traction
 in open sources communities. They were originally mostly targeted at message
 exchanging, but nothing prevents using them as storage formats. I have found
-off-the-shelf Rust support for Protocol Buffers, Cap'n Proto and Thrift, and
-tried Protobuf and Cap'n Proto.
+off-the-shelf Rust support for Protocol Buffers, Thrift, and
+implemented a Protocol Buffers alternative in the bench.
+
+ProtoBuf implemetation is a departure from the POD approach: the IDL
+defines its own data class, where each field is actually a placeholder:
+native scalar values are wrapped in `Option<>` and String are wrapped
+in a proprietary wrapper. So switching to ProtoBuf implies a bit more work
+than RustEncoding or Serde encoders.
+
+[Cap'n Proto](https://capnproto.org/) is a relatively recent development,
+"infinitely faster" than Protobuf. It does
+not use POD or near-POD `struct`, but rather provides generated `Reader`
+and `Builder` that wrap a buffer to provide accessor to the actual data.
+The buffer encoding does not contain pointer, or architecture dependent
+stuff, so it's ready to be send,read, written or shared. No encoding
+or decoding when loading a record. This is particularly relevant in our
+case because we only read one string from the record among seven.
+
+Here again, we have to go through a proprietary interface to access the
+data, so the switch is not completely trivial.
 
 ## Compression
 
@@ -92,11 +112,9 @@ alternatives. Not compressing the data at all may also be an option, actually.
 I have not considered bzip2 as its computing requirement are even bigger than
 Zlib's.
 
-## Plumbing
-
-Plugging these encoding and compression algorithms in and out of my code
+Plugging compression algorithms in and out of my code
 has been relatively painless, except for a few snags that I think are
 mostly due to the relative young age of the ecosystem: Rust having been
 stable for less than one year, library implementors are still working
-without a complete framework of good practise rules. We'll get
-there with time, what we need is experience and discussion.
+without a complete framework of good practise rules. Rust will get
+there with time, experience and discussion.

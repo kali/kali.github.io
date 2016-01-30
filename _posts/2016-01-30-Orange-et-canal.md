@@ -4,7 +4,7 @@ title: Chers, très chers Orange et Canal+
 ---
 
 <div style="float:right; width:200px; border: solid; margin: 20px; padding: 10px">
-<img src="../assets/union-jack.png" width="30px">
+<img src="/assets/union-jack.png" width="30px">
 This is basically a rant against Orange, the french ISP, and Canal+,
 content provider. They push their customers to use illegal services by
 making it impossible to use their paying service.

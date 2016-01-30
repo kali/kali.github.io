@@ -87,7 +87,7 @@ exchanging, but nothing prevents using them as storage formats. I have found
 off-the-shelf Rust support for Protocol Buffers, Thrift, and
 implemented a Protocol Buffers alternative in the bench.
 
-ProtoBuf implemetation is a departure from the POD approach: the IDL
+ProtoBuf implementation is a departure from the POD approach: the IDL
 defines its own data class, where each field is actually a placeholder:
 native scalar values are wrapped in `Option<>` and String are wrapped
 in a proprietary wrapper. So switching to ProtoBuf implies a bit more work
@@ -101,6 +101,11 @@ The buffer encoding does not contain pointer, or architecture dependent
 stuff, so it's ready to be send,read, written or shared. No encoding
 or decoding when loading a record. This is particularly relevant in our
 case because we only read one string from the record among seven.
+
+As a matter of fact, Cap'n proto actually offers an optional "packed"
+encoding (where strings of zeros are collapsed togethers). But if we
+use a more sophisticated compression on top of Cap'n proto, it may
+or may not be usefull. We'll try both.
 
 Here again, we have to go through a proprietary interface to access the
 data, so the switch is not completely trivial.
@@ -118,3 +123,68 @@ mostly due to the relative young age of the ecosystem: Rust having been
 stable for less than one year, library implementors are still working
 without a complete framework of good practise rules. Rust will get
 there with time, experience and discussion.
+
+## Columing data
+
+I have added one more "encoding" for a very simple not-even-proof-of-concept
+column storage scheme. This is very relevant here as we are only
+using two columns. It is called "buren". If you don't know why, you need
+to come and visit Paris.
+
+## Results
+
+This table have five groups of three columns, One group per compression scheme.
+**From left to right, no compression, snappy, lz4, gz, zlib/deflate**.
+For each group/compression scheme:
+
+* disk is the data size, in GB.
+* mbp is running time (in seconds) for my laptop: MacBook Pro, fall 2014, 16GB 2,8 GHz Intel Core i7)
+* ovh is running time on a rented box at OVH, metal, not virtual, 32GB, eight cores
+
+|          |disk   |    mbp| ovh   |—|  disk|   mbp |   ovh|—|  disk|mbp    |ovh    |—|disk|mbp |ovh |—|disk|mbp |ovh|
+|----------|------:|------:|------:|-|-----:|------:|-----:|-|-----:|------:|------:|-|---:|---:|---:|-|---:|---:|--:|
+|csv       |  120  |  640  |  366  | |  48  |   806 |   378| |  46  |  616  |  375  | |30  | 754| 477| |30  | 825|383|
+|json      |  213  |  855  |  461  | |  55  |   815 |   481| |  51  |  756  |  471  | |33  |    | 638| |33  |    |516|
+|bincode   |  150  |  377  |  202  | |  50  |   552 |   214| |  46  |  377  |  208  | |33  | 547| 335| |33  | 551|263|
+|mpack     |  116  |  509  |  272  | |  44  |   723 |   283| |  42  |  495  |  274  | |30  | 633| 379| |30  | 674|325|
+|cbor      |  186  | 1220  |  698  | |  53  |  1564 |   708| |  48  | 1171  |  697  | |33  |1361| 847| |33  |1537|719|
+|protobuf  |  121  |  378  |  243  | |  46  |   397 |   253| |  44  |  407  |  250  | |32  | 570| 364| |32  | 596|284|
+|capnproto |  188  |**242**|  207  | |  63  |   243 |   171| |**58**|**239**|**158**| |39  | 482| 319| |39  | 416|207|
+|pcapnproto|**140**|  257  |**183**| |  56  |   279 |   194| |  54  |  278  |  185  | |38  | 476| 316| |38  | 390|231|
+|buren     |  155  |**135**| **83**| |**39**|**139**|**87**| |  38  |  157  |   93  | |22  | 211| 114| |22  | 170| 99|
+
+There are still holes in the table: a few combination I was not able to test
+or had widely inconsistent results. Remember that I'm running benches on a
+laptop, that this 1/ is not scientific at all, 2/ generates a lot of angry fan
+noise in my office (which is also my bedroom).
+
+Anyway, I have highlighted a few "sweet spots" in the table. As I was writing
+earlier, Zlib is no longer a good choice.
+
+Remarks:
+
+* Buren, the ad-hoc column scheme *is* the best encoding here. It performs
+    well, and it also compresses better than the raw-based encodings.
+* mpack is compact, bincode is fast... Both outperform the two text encodings.
+* cbor looks very bad here. It generates bigger files than others binary
+    encodings and performs poorly than Json. This was unexpected, and I have
+    not looked into what is happening.
+* capnp outperforms all other raw-oriented schemes. It works well with LZ4, but
+    also in non-compressed form. On the laptop, the packed variant of cap'n
+    proto works better than the unpacked. On the linux box, it is the other way
+    around. This is because the linux box has a higher io bandwidth/cpu
+    bandwidth ratio. Cap'n proto uncompressed on the laptop streams data at
+    760MB/s, slightly above the simple `pv` measurement we did before. The same
+    test on the linux box reaches 910MB/s (`pv` says 930MB/s there). — I'll be
+    investigating about the linux box, I'm wondering if we could get a
+    higher bandwidth by organising the RAID differently.
+
+## Cap'n Proto all the way
+
+We can try one more thing. As Cap'n Proto can work with no encoding at all,
+we can wrap its `Reader` on raw memory-mapped files, assuming there are in
+then "not packed" form. This will only work in no zero-packing, no compression
+form. As a matter of fact, to make it work, I had to add a "record size" header
+between each record in the encoding, so the files are even bigger than the
+non compressed cap files. This will amount to 193GB (still smaller than Json)
+and runs, on the laptop, 261s.

@@ -156,7 +156,7 @@ For each group/compression scheme:
 * mbp is running time (in seconds) for my laptop: MacBook Pro, fall 2014, 16GB 2,8 GHz Intel Core i7)
 * ovh is running time on a rented box at OVH, metal, not virtual, 32GB, eight cores
 
-|          |disk   |    mbp| ovh   |—|  disk|   mbp |   ovh|—|  disk|mbp    |ovh    |—|disk|mbp |ovh |—|disk|mbp |ovh|
+|          |disk   |    mbp| ovh   | |  disk|   mbp |   ovh| |  disk|mbp    |ovh    | |disk|mbp |ovh | |disk|mbp |ovh|
 |----------|------:|------:|------:|-|-----:|------:|-----:|-|-----:|------:|------:|-|---:|---:|---:|-|---:|---:|--:|
 |json      |  213  |  855  |  461  | |  55  |   815 |   481| |  51  |  756  |  471  | |33  |1037| 638| |33  | 873|516|
 |csv       |  120  |  640  |  366  | |  48  |   806 |   378| |  46  |  616  |  375  | |30  | 754| 477| |30  | 825|383|

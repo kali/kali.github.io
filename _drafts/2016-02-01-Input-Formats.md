@@ -178,8 +178,8 @@ alone in a relative quiet state.
 
 Or if you like bars... (shorter is better)
 
-<img src="/assets/2016-02-01-formats-mbp.png" alt="flamegraph" height="400px">
-<img src="/assets/2016-02-01-formats-ovh.png" alt="flamegraph" height="400px">
+<img src="/assets/2016-02-01-formats-mbp.png" alt="format bars" height="400px">
+<img src="/assets/2016-02-01-formats-ovh.png" alt="format bars" height="400px">
 
 Anyway, I have highlighted a few "sweet spots" in the table. As I was writing
 earlier, Zlib is no longer a good choice.
@@ -226,12 +226,38 @@ still be possible improvements here: buren actually make copies of the textual
 data instead of borrowing it from the raw uncompressed buffer... malloc is at
 2.6%, dalloc at 2%... But is it worth the trouble ?
 
-Now the big chunk is the partial aggregation, at 64%. I'm not sure what could
-be done here. I'll have to think about it. I have already tried a few
-more-or-less obvious things, like an alternative hasher, but the hasher
-is not what appears here, more the HashMap plumbing itself. Our use case may
-not be the sweet spot for which HashMap has been optimized: we are doing lots
-of inserts, some update, no on-purpose read.
+Now the big chunk is the partial aggregation, at 64%. Is it some kind of 
+low-hanging fruit we could grab here ?
+
+Well, as a matter of fact, there is.
+
+`update_hashmap` is the fonction that actually performs in-place aggregation
+in the intermediary result, and later in the final result. Basically, it is
+called with a key (a 8 to 12 bytes prefix, remember) and a float (the 
+ad_revenue). It will lookup the prefix in the hashmap, update the value by
+adding the new revenue or just perform an insertion. This means we are
+performing a lot of insertion in the HashMap. A simple instrumentation (
+aka printf) showed me that in the case of Query2A, the partial map size
+at merge time is in the 700-800. I also happen to know that growing HashMap
+is expensive. So let's try and create these HashMap at capacity instead of
+letting them grow organically.
+
+It takes us from 135 seconds to 80 seconds. Wow. That was worth a try. I
+honestly did not thought it could be so big an improvement. I double checked
+it and triple checked it, but here we go. Have a last flamegraph on me.
+
+<img src="/assets/2016-02-01-flamegraph-hashmap-capacity.svg" alt="flamegraph" height="400px">
+
+## Conclusion
+
+So that was a big post, but we have gone a long way. **We started at ~660 seconds
+and are now at 80 seconds.** Let's recap:
+
+* use an efficient format. At least something binary, but consider columns.
+* pick an efficient compression format. SSD means we are CPU-bound
+  again. So we need something not CPU-greedy. LZ4 and Snappy look good.
+* try obvious things, sometimes there are good surprises :)
+* of course, use a profiler. They make nice graphes.
 
 ## What's next
 

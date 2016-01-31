@@ -35,7 +35,22 @@ a lot a time is spent in CSV and Zlib functions. More "decoding stuff" appears
 just above the hilighted line (which is the actual final HashMap
 construction and is below 3% of the computing resources consumed).
 
-Not a huge surprise.
+A flamegraph will show it even better...
+
+<img src="/assets/2016-02-01-flamegraph-csv-deflate.svg" alt="flamegraph" height="400px">
+
+The fourth line (from the bottom) splits nicely the actual CPU load:
+
+* Inlet::push, weight 14%, and is about building partial results in each
+worker thread
+* MultiHashMapInlet::drop, at 2.25% is where these partial results are
+merged to the total result
+* finally at 82%, the main "map" function shows. Among it, worth noting are:
+   * a 15% cpu chunk eaten by inflate (decompression)
+   * a closure (fnfn) at 16% which seems about decoding data to POD 
+   * also worth noting are about 9% spent in je_mallocx
+
+All in all, not huge surprise.
 
 Compression makes a lot of sense when I/O bandwidth is scarce and
 computing power is plentiful. But SSDs really altered the equilibrium
@@ -47,19 +62,19 @@ But it is an absolute horror to parse for a computer. As a matter of fact,
 most of the widely used data formats in data science are human readable,
 and terrible for performance: CSV, Json, XML.
 
-It is still frown upon to use a binary format, but we will probably have to get use
-to it. Text formats are for Debug mode. HTTP is moving from a text format to
-a Binary format. We have been doing HTTP in Debug mode for 20 years, this is
+It is still frown upon to use a binary format, but we will probably have to get
+uses to it. Text formats are for Debug mode. HTTP is moving from a text format
+to a Binary format. We have been doing HTTP in Debug mode for 20 years, this is
 probably enough. Let's grow up, develop tools to pretty print these new
 formats and protocols, and stop wasting so much computing power. Maybe we will
-save battery time and polar bears.
+save polar bears. At least, we'll save battery time.
 
 Note that, as we try to find a better compromise for efficient data loading,
 we do not necessarily want to change the way data is put in long-term cold
 storage. It may be worth vaulting the data in highly compressed (bzip2) Json
-or XML or whatever format will be felt resilient to technology evolution, and
-use a separate, very loadable, probably binary, format to feed day-to-day
-data analysis.
+or XML or whatever format will be percieve as resilient to technology
+evolution, and use a separate, very loadable, probably binary, format to feed
+day-to-day data analysis.
 
 ## Parser-friendly encoding
 
@@ -96,7 +111,7 @@ than RustEncoding or Serde encoders.
 [Cap'n Proto](https://capnproto.org/) is a relatively recent development,
 "infinitely faster" than Protobuf. It does
 not use POD or near-POD `struct`, but rather provides generated `Reader`
-and `Builder` that wrap a buffer to provide accessor to the actual data.
+and `Builder` that wrap a buffer to provide accessors to the actual data.
 The buffer encoding does not contain pointer, or architecture dependent
 stuff, so it's ready to be send,read, written or shared. No encoding
 or decoding when loading a record. This is particularly relevant in our
@@ -105,7 +120,7 @@ case because we only read one string from the record among seven.
 As a matter of fact, Cap'n proto actually offers an optional "packed"
 encoding (where strings of zeros are collapsed togethers). But if we
 use a more sophisticated compression on top of Cap'n proto, it may
-or may not be usefull. We'll try both.
+or may not be useful. We'll try both.
 
 Here again, we have to go through a proprietary interface to access the
 data, so the switch is not completely trivial.
@@ -120,7 +135,7 @@ Zlib's.
 Plugging compression algorithms in and out of my code
 has been relatively painless, except for a few snags that I think are
 mostly due to the relative young age of the ecosystem: Rust having been
-stable for less than one year, library implementors are still working
+stable for less than one year, library implementers are still working
 without a complete framework of good practise rules. Rust will get
 there with time, experience and discussion.
 
@@ -143,8 +158,8 @@ For each group/compression scheme:
 
 |          |disk   |    mbp| ovh   |—|  disk|   mbp |   ovh|—|  disk|mbp    |ovh    |—|disk|mbp |ovh |—|disk|mbp |ovh|
 |----------|------:|------:|------:|-|-----:|------:|-----:|-|-----:|------:|------:|-|---:|---:|---:|-|---:|---:|--:|
+|json      |  213  |  855  |  461  | |  55  |   815 |   481| |  51  |  756  |  471  | |33  |1037| 638| |33  | 873|516|
 |csv       |  120  |  640  |  366  | |  48  |   806 |   378| |  46  |  616  |  375  | |30  | 754| 477| |30  | 825|383|
-|json      |  213  |  855  |  461  | |  55  |   815 |   481| |  51  |  756  |  471  | |33  |    | 638| |33  |    |516|
 |bincode   |  150  |  377  |  202  | |  50  |   552 |   214| |  46  |  377  |  208  | |33  | 547| 335| |33  | 551|263|
 |mpack     |  116  |  509  |  272  | |  44  |   723 |   283| |  42  |  495  |  274  | |30  | 633| 379| |30  | 674|325|
 |cbor      |  186  | 1220  |  698  | |  53  |  1564 |   708| |  48  | 1171  |  697  | |33  |1361| 847| |33  |1537|719|
@@ -156,7 +171,15 @@ For each group/compression scheme:
 There are still holes in the table: a few combination I was not able to test
 or had widely inconsistent results. Remember that I'm running benches on a
 laptop, that this 1/ is not scientific at all, 2/ generates a lot of angry fan
-noise in my office (which is also my bedroom).
+noise in my office (which is also my bedroom). As a matter of fact, all
+combinations in the mbp have not been treated fairly. I have made extra runs
+for the good perfoming combinations where I was basically leaving my laptop
+alone in a relative quiet state.
+
+Or if you like bars... (shorter is better)
+
+<img src="/assets/2016-02-01-formats-mbp.png" alt="flamegraph" height="400px">
+<img src="/assets/2016-02-01-formats-ovh.png" alt="flamegraph" height="400px">
 
 Anyway, I have highlighted a few "sweet spots" in the table. As I was writing
 earlier, Zlib is no longer a good choice.
@@ -164,7 +187,7 @@ earlier, Zlib is no longer a good choice.
 Remarks:
 
 * Buren, the ad-hoc column scheme *is* the best encoding here. It performs
-    well, and it also compresses better than the raw-based encodings.
+    well, and it also compresses better than the row-based encodings.
 * mpack is compact, bincode is fast... Both outperform the two text encodings.
 * cbor looks very bad here. It generates bigger files than others binary
     encodings and performs poorly than Json. This was unexpected, and I have
@@ -186,5 +209,32 @@ we can wrap its `Reader` on raw memory-mapped files, assuming there are in
 then "not packed" form. This will only work in no zero-packing, no compression
 form. As a matter of fact, to make it work, I had to add a "record size" header
 between each record in the encoding, so the files are even bigger than the
-non compressed cap files. This will amount to 193GB (still smaller than Json)
-and runs, on the laptop, 261s.
+non-compressed cap files. This will amount to 193GB (still smaller than Json)
+and runs, on the laptop, in 261s. So this compromise is not particularly
+relevant.
+
+## And the winner is...
+
+So where are we now ? I have picked buren encoding and snappy compression. This
+is only marginally slower than uncompressed buren, and weights significantly
+less on my hard drive.
+
+<img src="/assets/2016-02-01-flamegraph-buren-snz.svg" alt="flamegraph" height="400px">
+
+Now the big "map" stage, with all decoding, is 25% instead of 85%. There might
+still be possible improvements here: buren actually make copies of the textual
+data instead of borrowing it from the raw uncompressed buffer... malloc is at
+2.6%, dalloc at 2%... But is it worth the trouble ?
+
+Now the big chunk is the partial aggregation, at 64%. I'm not sure what could
+be done here. I'll have to think about it. I have already tried a few
+more-or-less obvious things, like an alternative hasher, but the hasher
+is not what appears here, more the HashMap plumbing itself. Our use case may
+not be the sweet spot for which HashMap has been optimized: we are doing lots
+of inserts, some update, no on-purpose read.
+
+## What's next
+
+Next post should be the one about running this on a — modest — cluster with 
+[timely dataflow](https://github.com/frankmcsherry/timely-dataflow), if I
+can get time on the cluster.

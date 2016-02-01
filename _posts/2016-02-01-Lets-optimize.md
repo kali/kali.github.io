@@ -48,7 +48,7 @@ worker thread
 merged to the total result
 * finally at 82%, the main "map" function shows. Among it, worth noting are:
    * a 15% cpu chunk eaten by inflate (decompression)
-   * a closure (fnfn) at 16% which seems about decoding data to POD 
+   * a closure (fnfn) at 16% which seems about decoding data to POD
    * also worth noting are about 9% spent in je_mallocx
 
 All in all, not huge surprise.
@@ -159,15 +159,15 @@ For each group/compression scheme:
 
 |    format  |  disk   |    mbp  |   ovh   | |  disk  |   mbp   |   ovh  | |  disk  |  mbp    |  ovh    | | disk |  mbp |  ovh | | disk |  mbp | ovh |
 |:-----------|--------:|--------:|--------:|-|-------:|--------:|-------:|-|-------:|--------:|--------:|-|-----:|-----:|-----:|-|-----:|-----:|----:|
-| json       |   213   |   855   |   461   | |   55   |    815  |    481 | |   51   |   756   |   471   | | 33   | 1037 |  638 | | 33   |  873 | 516 | 
-| csv        |   120   |   640   |   366   | |   48   |    806  |    378 | |   46   |   616   |   375   | | 30   |  754 |  477 | | 30   |  825 | 383 | 
-| bincode    |   150   |   377   |   202   | |   50   |    552  |    214 | |   46   |   377   |   208   | | 33   |  547 |  335 | | 33   |  551 | 263 | 
-| mpack      |   116   |   509   |   272   | |   44   |    723  |    283 | |   42   |   495   |   274   | | 30   |  633 |  379 | | 30   |  674 | 325 | 
-| cbor       |   186   |  1220   |   698   | |   53   |   1564  |    708 | |   48   |  1171   |   697   | | 33   | 1361 |  847 | | 33   | 1537 | 719 | 
-| protobuf   |   121   |   378   |   243   | |   46   |    397  |    253 | |   44   |   407   |   250   | | 32   |  570 |  364 | | 32   |  596 | 284 | 
-| capnproto  |   188   | **242** |   207   | |   63   |    243  |    171 | | **58** | **239** | **158** | | 39   |  482 |  319 | | 39   |  416 | 207 | 
-| pcapnproto | **140** |   257   | **183** | |   56   |    279  |    194 | |   54   |   278   |   185   | | 38   |  476 |  316 | | 38   |  390 | 231 | 
-| buren      |   155   | **135** |  **83** | | **39** | **139** | **87** | |   38   |   157   |    93   | | 22   |  211 |  114 | | 22   |  170 |  99 | 
+| json       |   213   |   855   |   461   | |   55   |    815  |    481 | |   51   |   756   |   471   | | 33   | 1037 |  638 | | 33   |  873 | 516 |
+| csv        |   120   |   640   |   366   | |   48   |    806  |    378 | |   46   |   616   |   375   | | 30   |  754 |  477 | | 30   |  825 | 383 |
+| bincode    |   150   |   377   |   202   | |   50   |    552  |    214 | |   46   |   377   |   208   | | 33   |  547 |  335 | | 33   |  551 | 263 |
+| mpack      |   116   |   509   |   272   | |   44   |    723  |    283 | |   42   |   495   |   274   | | 30   |  633 |  379 | | 30   |  674 | 325 |
+| cbor       |   186   |  1220   |   698   | |   53   |   1564  |    708 | |   48   |  1171   |   697   | | 33   | 1361 |  847 | | 33   | 1537 | 719 |
+| protobuf   |   121   |   378   |   243   | |   46   |    397  |    253 | |   44   |   407   |   250   | | 32   |  570 |  364 | | 32   |  596 | 284 |
+| capnproto  |   188   | **242** |   207   | |   63   |    243  |    171 | | **58** | **239** | **158** | | 39   |  482 |  319 | | 39   |  416 | 207 |
+| pcapnproto | **140** |   257   | **183** | |   56   |    279  |    194 | |   54   |   278   |   185   | | 38   |  476 |  316 | | 38   |  390 | 231 |
+| buren      |   155   | **135** |  **83** | | **39** | **139** | **87** | |   38   |   157   |    93   | | 22   |  211 |  114 | | 22   |  170 |  99 |
 
 There are still holes in the table: a few combination I was not able to test
 or had widely inconsistent results. Remember that I'm running benches on a
@@ -227,14 +227,14 @@ still be possible improvements here: buren actually make copies of the textual
 data instead of borrowing it from the raw uncompressed buffer... malloc is at
 2.6%, dalloc at 2%... But is it worth the trouble ?
 
-Now the big chunk is the partial aggregation, at 64%. Is it some kind of 
+Now the big chunk is the partial aggregation, at 64%. Is it some kind of
 low-hanging fruit we could grab here ?
 
 Well, as a matter of fact, there is.
 
 `update_hashmap` is the fonction that actually performs in-place aggregation
 in the intermediary result, and later in the final result. Basically, it is
-called with a key (a 8 to 12 bytes prefix, remember) and a float (the 
+called with a key (a 8 to 12 bytes prefix, remember) and a float (the
 ad_revenue). It will lookup the prefix in the hashmap, update the value by
 adding the new revenue or just perform an insertion. This means we are
 performing a lot of insertion in the HashMap. A simple instrumentation (
@@ -265,6 +265,6 @@ and are now at 80 seconds.** Let's recap:
 
 ## What's next
 
-Next post should be the one about running this on a — modest — cluster with 
+Next post should be the one about running this on a — modest — cluster with
 [timely dataflow](https://github.com/frankmcsherry/timely-dataflow), if I
 can get time on the cluster.

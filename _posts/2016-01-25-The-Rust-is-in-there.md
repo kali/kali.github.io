@@ -12,7 +12,8 @@ Ok, I'm done. Promise.
 
 ## What in there could be librarized?
 
-In the previous post, I stated that not relying on a framework was freeing
+In the [previous post]({% post_url 2016-01-15-Awkward-zone%}),
+I stated that not relying on a framework was freeing
 the developer from the framework constraints. For instance, one can choose
 to have such or such result in memory because it fits.
 
@@ -235,5 +236,6 @@ All in all, this is not too bad.
 
 ## What's next
 
-Next time, we will have a look at input formats and how they affect the
-performance.
+Next time, we will have a look at
+[input formats]({% post_url 2016-02-01-Lets-optimize%})
+and how they affect the performance.

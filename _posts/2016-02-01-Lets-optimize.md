@@ -5,9 +5,10 @@ title: Let's optimize
 
 ## I/O and CPU
 
-We have seen in part #1 that my laptop is processing 30GB of deflated CSV in about
+We have seen in [part #1]({% post_url 2016-01-15-Awkward-zone %}) that my laptop is
+processing 30GB of deflated CSV in about
 11 minutes. If we want to do better, the first step is find out what is our
-bottleneck.
+bottleneck. The code was presented in [part #2]({% post_url 2016-01-25-The-Rust-is-in-there %}).
 
 For years, we have worked under the assumption that IO where the limiting
 factor in data processing. With SSD and PCIe disks, all this has changed.

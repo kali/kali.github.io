@@ -194,8 +194,10 @@ That was for the A variant. The C variant runs in 666 (!) seconds.
 
 As I have hinted several times, I plan to detail more iterations in the
 coming weeks.
-I will show some code (once it's cleaned), and do more stuff: play with
-various input formats, distribute the computation using
+I will show [some code]({% post_url 2016-01-25-The-Rust-is-in-there%})
+(once it's cleaned), and do more stuff:
+[play with various input formats and optimize]({% post_url 2016-02-01-Lets-optimize %}),
+distribute the computation using
 [timely dataflow](https://github.com/frankmcsherry/timely-dataflow)
 on a cluster. This part is done, I just need to write about it :)
 

@@ -65,7 +65,7 @@ most of the widely used data formats in data science are human readable,
 and terrible for performance: CSV, Json, XML.
 
 It is still frown upon to use a binary format, but we will probably have to get
-uses to it. Text formats are for Debug mode. HTTP is moving from a text format
+used to it. Text formats are for Debug mode. HTTP is moving from a text format
 to a Binary format. We have been doing HTTP in Debug mode for 20 years, this is
 probably enough. Let's grow up, develop tools to pretty print these new
 formats and protocols, and stop wasting so much computing power. Maybe we will

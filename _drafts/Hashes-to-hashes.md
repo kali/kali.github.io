@@ -181,7 +181,7 @@ Have you noticed how this 91s point makes 2C slighly faster than our previous
 best for 2B?
 
 This was unexpected. So let's try 2A and 2B with 300 buckets too... 54
-and 64! We're getting better at this, but we don't why.
+and 64! We're getting better at this, but we don't know why.
 
 OK, we definitely need more data.
 It becomes increasingly difficult to get reliable measurements on the laptop

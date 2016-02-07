@@ -205,14 +205,10 @@ every other fourth value is a local peak, every other eighth value is a higher
 local peak and so on until the 256 value which is dreadful.
 
 Let's check out the FlameGraphs. I even managed to get the SVG *working* this
-time.
-
-2B with 256 buckets
+time. First one in 2B with 256 buckets, second one with 257.
 
 <object data="{{site.baseurl}}/assets/2016-02-04-query2b256.svg"
         type="image/svg+xml" width="650px"> </object>
-
-and 257.
 
 <object data="{{site.baseurl}}/assets/2016-02-04-query2b257.svg"
         type="image/svg+xml" width="650px"> </object>

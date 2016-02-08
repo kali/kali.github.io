@@ -30,9 +30,9 @@ Note there is a hardware section than can be unfolded.
 
 I chose to use my laptop instead (mid-2014 MacBook Pro Retina).
 
-My [first attempts]({{ post_url 2016-01-15-Awkward-zone}}) for 2A were in the
+My [first attempts]({% post_url 2016-01-15-Awkward-zone %}) for 2A were in the
 realm of 650-800 seconds, but, we found some nice optimisations
-[last week]({{ post_url 2016-02-01-Lets-optimize }}):
+[last week]({% post_url 2016-02-01-Lets-optimize %}):
 
 * re-encoding the data got us at 135 seconds,
 * pre-allocating intermediary HashMap at the right capacity got us at 80
@@ -84,7 +84,7 @@ bucketize and hash separately the data of each input chunk before merging
 each chunk bucket.
 
 Now remember how dominant HashMap manipulations where showing in the
-FlameGraphs [last week]({{ post_url 2016-02-01-Lets-optimize }})?
+FlameGraphs [last week]({% post_url 2016-02-01-Lets-optimize %})?
 Well, each bit of data gets inserted twice in a HashMap in the
 hand-made implementation and only once in the timely implementation...
 

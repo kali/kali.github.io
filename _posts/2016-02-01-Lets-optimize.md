@@ -266,6 +266,7 @@ and are now at 80 seconds.** Let's recap:
 
 ## What's next
 
-Next post should be the one about running this on a — modest — cluster with
+[Next post]({% post_url 2016-02-08-Hashes-to-hashes %}) should be the one
+about running this on a — modest — cluster with
 [timely dataflow](https://github.com/frankmcsherry/timely-dataflow), if I
 can get time on the cluster.

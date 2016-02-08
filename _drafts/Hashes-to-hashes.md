@@ -28,8 +28,10 @@ Note there is a hardware section than can be unfolded.
 |   2B    |  10|  31,348,913 | 764s |  100s |      56s |
 |   2C    |  12| 253,890,330 | 730s |  132s |      79s |
 
-Our [first attempts]({{ post_url 2016-01-15-Awkward-zone}}) for 2A were in the
-realm of 650-800 seconds, but, we found some nice optimisations,
+I chose to use my laptop instead (mid-2014 MacBook Pro Retina).
+
+My [first attempts]({{ post_url 2016-01-15-Awkward-zone}}) for 2A were in the
+realm of 650-800 seconds, but, we found some nice optimisations
 [last week]({{ post_url 2016-02-01-Lets-optimize }}):
 
 * re-encoding the data got us at 135 seconds,
@@ -77,6 +79,10 @@ evenly and arbitrary accross them.
         build its part of the final results as a HashMap
 * in the end the actual result is spread in as many HashMaps as we had workers
 
+In short, timely bucketize the data then hash it, whereas the hand-made runner
+bucketize and hash separately the data of each input chunk before merging
+each chunk bucket.
+
 Now remember how dominant HashMap manipulations where showing in the
 FlameGraphs [last week]({{ post_url 2016-02-01-Lets-optimize }})?
 Well, each bit of data gets inserted twice in a HashMap in the
@@ -90,11 +96,12 @@ it.
 
 What if we just use regular Vec instead of HashMap for the worker buckets?
 
-Guess what. Yep. 60 seconds too. Phew.
+Guess what. Yep. 60 seconds. So timely and the hand-made runner are in the
+same ball park. Phew.
 
 ## Fixing Query2C
 
-As I said before, I did the optimisation work on Query2A, not Query2C.
+Were are we so far ?
 
 | Query   |  X | group count | Hive | Shark | Redshift |  Me so far  |
 |:-------:|---:|------------:|-----:|------:|---------:|------------:|
@@ -103,7 +110,7 @@ As I said before, I did the optimisation work on Query2A, not Query2C.
 |   2C    |  12| 253,890,330 | 730s |  132s |      79s |        255s |
 
 So we are doing a bit better than Shark on 2A and 2B, but something
-wrong happens in 2C.
+unpleasant happens in 2C.
 
 Let's have a look at some metrics.
 
@@ -218,7 +225,7 @@ top right of the first one and type "Full" in there... See that FullBucket
 stuff ? Smells like collisions :) There is some kind of resonance happening
 between the partitioner and the HashMap hasher.
 
-## partitioner and hashers
+## Partitioners and hashers
 
 Bottom line is `hash(key)%bucket.len()` partition data in a way that will
 generate an important number of collision in the buckets. With 256

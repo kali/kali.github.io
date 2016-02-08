@@ -140,12 +140,7 @@ its memory space and starts swapping. What is happening is, again,
 HashMap reallocations, this time affecting the final buckets HashMap,
 not the intermediary ones — which we have just replaced by Vectors anyway.
 
-Rust HashMaps are created with a raw initial capacity of 32 elements. Whenever
-the actual number of elements in the HashMap gets over 90% of the current raw
-capacity, the HashMap reallocates itself with a twice bigger raw capacity. So
-this accounts for the "steps" in the memory lines (blue, brown) in the 2C graph.
-
-Now, you may remember that my initial evaluation of the size of the final
+You may remember that my initial evaluation of the size of the final
 result for 2C in the first post was about 4GB. But here, we are actually
 manipulating 12GB.
 
@@ -154,7 +149,7 @@ is 4 bytes (a 32bit float). 253M*(12+4)=4GB.
 
 Well, reality is a bit different. First of all there is the capacity management
 issue. To keep doing its work fast, a HashMap has to waste some space.
-Rust HashMap maintains at least 10% of empty space in it. If it get above this
+Rust HashMap needs at least 10% of empty space in it. If it get above this
 mark, it reallocates itself doubling its size.
 So depending on when the
 reallocation happens, we may need to multiply the theoretical data size by

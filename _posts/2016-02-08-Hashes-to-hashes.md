@@ -176,7 +176,7 @@ the very beginning. That was very counter productive.
 
 But... I can also very easily change the number of partition buckets.
 Bumping it from 256 to 300 made enough room in the buckets to delay the
-dramatic reallocation. And I got is a 91s run!
+dramatic reallocation. And we get a 91 seconds run!
 
 <img    alt="Performance and resources usage for 2C"
         src="{{site.baseurl}}/assets/2016-02-04-k12-hashes-b300.png"
@@ -234,9 +234,9 @@ I tried to get more entropy (from the 7 other bytes) by adding some salt:
 What I am doing is `hash("noiz"+key)%bucket.len()` instead.
 
 As we are talking about hashers, 
-several people have told that I would probably benefit from switching the 
+several people have told that I would probably benefit from using the 
 FNV
-hash to the default SIP hasher in the HashMap. I've actually been using
+hasher instead of the default SIP hasher. I've actually been using
 FNV for a while even if it was probably a premature optimisation when I
 made the switch.
 

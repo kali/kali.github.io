@@ -26,7 +26,7 @@ quite a lot of work and
 trying to stay in the realm of "fair" optimisations that an automatic query
 planner could find.
 
-The other column are partial results from the BigData benchmark, running on
+The other columns are partial results from the BigData benchmark, running on
 a 8$/hr on Amazon EC2.
 
 So let's do the same. Let's go to EC2 and buy us a 8$/hr cluster.
@@ -34,7 +34,7 @@ So let's do the same. Let's go to EC2 and buy us a 8$/hr cluster.
 # Timely dataflow
 
 My implementation of Query2 is not distributable. It is multithreaded, but
-can not span process or hosts. Doing this by hand would be a lot of work, but
+can not span processes or hosts. Doing this by hand would be a lot of work, but
 the Rust ecosystem provides a little gem called Timely dataflow.
 
 Timely dataflow is designed as a low-level toolbox for distributing work. To
@@ -44,11 +44,12 @@ on Naiad at Microsoft Research, and has since ported it from C# to Rust.
 
 Integrating Query2 in timely has not been very difficult — even if I had to 
 get some help from higher deities — but induced a change in the
-general algorithm which I have described in the previous post.
+general algorithm which I have described in the 
+[previous post]({%post_url 2016-02-08-Hashes-to-hashes%}).
 
 It turns out the way timely lead me to write the aggregation is about 10% more
 efficient than my ad-hoc implementation, so I won't complain. I have not
-completely explored the reason that make is so. Re-organising the ad-hoc
+completely explored the reason that make it so. Re-organising the ad-hoc
 implementation so that the data flows in a way similar to the way it flows
 in the timely program may help.
 
@@ -67,11 +68,11 @@ hour respectively.
 
 The c3 series is more plentiful in terms of choice: c3.large would barely
 contains our data, but c3.xlarge, c3.2xlarge, c3.4xlarge or even the huge
-c3.8xlarge (36 cores, 60GB) are eligible. We could still afford 5 of this
+c3.8xlarge (36 cores, 60GB) are eligible. We could still afford 5 of these
 things with our $8 budget.
 
 To make things more interesting, my early tries and conversations with the
-timely dataflow team lead to the realisation that their was a particular
+timely dataflow team lead to the realisation that there was a particular
 parameter that had a huge impact on the performance of a timely cluster.
 This parameter is the worker number. More about that in a minute.
 

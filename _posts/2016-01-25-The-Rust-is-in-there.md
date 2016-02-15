@@ -239,3 +239,5 @@ All in all, this is not too bad.
 Next time, we will have a look at
 [input formats]({% post_url 2016-02-01-Lets-optimize%})
 and how they affect the performance.
+
+{% include {{site.baseurl}}/BigDataSeries.md %}

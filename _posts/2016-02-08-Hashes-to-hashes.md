@@ -263,3 +263,5 @@ and managed to squeeze a few more seconds out of the running time.
 |   2C    |  12| 253,890,330 | 730s |  132s |      79s |    91s   |
 
 Next week, I promise, we'll have fun with timely dataflow and clusters.
+
+{% include {{site.baseurl}}/BigDataSeries.md %}

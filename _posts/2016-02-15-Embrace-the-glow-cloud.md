@@ -109,7 +109,7 @@ try a figure a bit under the number of cpus. It turns out the best value I
 could find was around 10 workers, so a small third of the number of cpus...
 
 Well that's the thing. We are in uncharted territory. From my understanding, 
-Frank at-scale experiments with timely are mostly revolving about in-memory
+Frank's at-scale experiments with timely are mostly revolving about in-memory
 graph processing, so our spark-like load might be one of the first to go
 there (or to report it). Here be baboons!
 
@@ -164,8 +164,8 @@ that the worker count need to be adjusted on the way. The optimum seems to be
 at number-of-cores - 1 for small cluster, and down to a fraction of the
 number-of-cores (around one third) for the bigger cluster configuration I
 have tried. Intuitively, as the cluster grows, there is more stuff to be
-exchanges with peers, so the worker thread count (that the parameter control)
-have to be reduced to leave more space to the background networking thread.
+exchanged with peers, so the worker thread count (that the parameter control)
+has to be reduced to leave more space to the background networking thread.
 
 This is for the 5*c3.8xlarge cluster. The lines show the duration of the
 process, the bars are cost-efficiency comparing to RedShift.
@@ -202,3 +202,5 @@ So what can we learn with these experiments on ec2?
 
 So there is lot of potential here. Somebody *needs* to make BigData tools
 in Rust :)
+
+{% include {{site.baseurl}}/BigDataSeries.md %}

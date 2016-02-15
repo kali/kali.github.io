@@ -270,3 +270,5 @@ and are now at 80 seconds.** Let's recap:
 about running this on a — modest — cluster with
 [timely dataflow](https://github.com/frankmcsherry/timely-dataflow), if I
 can get time on the cluster.
+
+{% include {{site.baseurl}}/BigDataSeries.md %}

@@ -69,7 +69,7 @@ in one worker. There is no shared-across-worker memory structures visible to
 the application developer.
 
 A very efficient way to
-think about execution plan, obviously, to think in map and reduce terms. 
+think about execution plan, obviously, to think in map and reduce terms.
 
 * Maps are a "pure" functions of an item in a stream. A map will be run on each
     item on the stream, producing one item of output at each turn, not having
@@ -99,7 +99,7 @@ Query2. From SQL to stream (at least in my head) to translation to timely.
 
 I happened to follow a different mental path for the non-timely implementation.
 If you remember the previous posts, with less constraints to start with (a
-blank page) I manage to produce a slower implementation than the one 
+blank page) I manage to produce a slower implementation than the one
 constrained by timely... even if it had only one reducer step.
 
 Distributing Reducers is more complicated than Mappers because we must deal
@@ -139,7 +139,6 @@ fn main() {
         root.scoped::<u64, _, _>(move |builder| {
             [...]
         };
-        while root.step() {}
     }
 }
 ```
@@ -151,8 +150,7 @@ them in places where borrowing `root` will not be an option — rust being rust
 it is picky about that.
 
 The real interesting stuff happen in `scoped()`. This is where we will plug
-everything together. The final line call root.step() to get the everybody
-working until everything is done.
+everything together.
 
 First we have lines 23 to 33 devoted to read the input files. There is not much
 in there that is timely-specific, but let's have a look at them, some
@@ -205,7 +203,7 @@ let mut hashmap = ::std::collections::HashMap::new();
 let mut sum = 0usize;
 ```
 
-`to_stream` actually comes from timely! It takes a standard rust Iterator and 
+`to_stream` actually comes from timely! It takes a standard rust Iterator and
 transforms it into a timely Stream. From a 30 000 feet point of view, think of
 it as a mere adaptor.
 
@@ -263,30 +261,35 @@ we are returning a hash of the key from the pair. Timely will make sure all
 records with the same hash are going to the same worker.
 
 Next come a debug and audit name for our worker, and a vector of timestamps
-we know we will want to be notified at. I have not managed to use this
-feature correctly, but we can also register for timestamp later.
+we know we will want to be notified at. We could use this to register our
+the required notification, except we don't know what to_stream() uses as
+timestamp. Fortunately, there are other way to register notifications.
 
 Finally, the last argument of unary_notify is the logic that the operator
 will run every time it gets a chance. It takes the form of a closure which
-allow the logic to make use of the input, output and notification bus on one
-hand, and, by closure capture, the various variables the worker has declared
-as its state: more specifically for us the hashmap variable.
+allow the logic to make use of the input, output and notification bus, and,
+by capture, the various variables the worker has declared
+as its state: more specifically, here, the `hashmap` variable.
 
 Inside this closure, we code how to react to the presence of an input batch or
-a notification. In case of an input batch we register to the notification bus
-that we have stuff to do relating to this epoch and we need to be called when 
-it's over. Note how I spam the notify_at on each input batch. Details are still
-unclear to me. More clearly, we update the state hashmap. The update_hashmap
-acts by inserting a new key or updating the value of an existing key using the
-additioner we provide.
+a notification. In case of an input batch we get our chance to register to
+the notification bus that we need to know the end of the epoch matching
+the data coming in. We are calling notify_at repeatedly. It is a bit
+offsetting, but the cost is amortized by the framework. It is preferable
+to guessing whatever `to_stream()` does and it's what the timely guys
+recommend anyway.
 
-Second bit of logic is what to do when notifications occur: at that point we
+Moving on to the "payload" logic, we update the state hashmap. The
+update_hashmap acts by inserting a new key or updating the value of an
+existing key using the additioner we provide.
+
+Second bit of logic is what to do when the notification occur: we will
 send in the outgoing stream the sole count of entries in our map. This is where
 we are doing half of the count. A strict implementation of reduceByKey would
 shove the whole HashMap in the pipe, but we know better.
 
-As a matter of fact this is an instance of a Map being, again, the good guy.
-Remember the pseudo-shark implementation above ? It featured a 
+This is an instance of a Map being, again, the good guy.
+Remember the pseudo-spark implementation above ? It featured a
 `reduceByKey(...).count()`. So the stream between these two logical operators
 is a stream of disjoints HashMap. Count, on the other hand, could be
 implemented as follow (again, pseudo-code).
@@ -305,30 +308,56 @@ So what I have done here was to move "up" the first of the count map as close
 as possible to the reduceByKey above, avoiding making a stream of HashMap and
 having to explain that to rust.
 
-So everything that remains is to move everybody to a worker (let's pick worker
-0) and sum the numbers incoming.
+Back to the code, everything that remains is to move everybody to a worker
+(let's pick worker 0) and sum the numbers incoming.
 
 ```rust
-   let _: Stream<_, ()> = group.unary_notify(Exchange::new(|_| 0u64),
-          "count",
-          vec![],
-          move |input, _, notif| {
-              input.for_each(|time, data| {
-                  notif.notify_at(time);
-                  for x in data.drain(..) {
-                      sum += x;
-                  }
-              });
-              notif.for_each(|_, _| {
-                  if index == 0 {
-                      println!("result: {}", sum);
-                  }
-              });
+let _: Stream<_, ()> = group.unary_notify(Exchange::new(|_| 0u64),
+      "count",
+      vec![],
+      move |input, _, notif| {
+          input.for_each(|time, data| {
+              notif.notify_at(time);
+              for x in data.drain(..) {
+                  sum += x;
+              }
           });
+          notif.for_each(|_, _| {
+              if index == 0 {
+                  println!("result: {}", sum);
+              }
+          });
+      });
 });
 ```
 
 Exchange is now a constant function, the rest is similar: the input chunks
-contains numbers that are added to the worker-scoped `sum` variable. Once
-we get notified, we output the count on the console.
+contains numbers that are added to the worker-scoped `sum` variable. We
+register the notification in the input handler, as we know spamming it is
+tolerable. Once we get notified, we output the count on the console.
 
+And that's it.
+
+This executable is ready for the distributed mode, but the distribution
+itself is not
+covered: something or someone needs to copy the executable on each of the
+cluster nodes, provide it the list of its peers and start it. 
+If you want to run a second time you need
+to go to each node and start the process again...
+For the ec2 tests, I used ansible scripts.
+
+## Recap
+
+Of course, we are far from the elegant four lines of Spark, we had to do many
+things by hand including translating the logical query to a distributable
+executable plan. We produced a full screen with a good quantity of boilerplate,
+but we have a standalone executable that will crunch the data with an
+efficiency way higher than that of Spark or RedShift.
+
+Building an equivalent of Spark or RedShift on top of timely is a daunting
+task. But there are intermediary objectives that could make sense: helpers and
+ready-to-use operators to make writing data processing task easier, daemons
+that would migrate executables to all the nodes, start them and manage
+the peer list for instance.
+
+Not sure what's the next step is yet.

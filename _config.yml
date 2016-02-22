@@ -1,6 +1,6 @@
-# Dependencies
-markdown:         redcarpet
-highlighter:      pygments
+markdown: kramdown
+highlighter: rouge
+syntax_highlighter: rouge
 
 # Permalinks
 permalink:        pretty
@@ -15,16 +15,12 @@ author:
   name:           'Mathieu Poumeyrol'
   url:              http://www.poumeyrol.fr
 
-paginate:         5
-
 # Custom vars
-version:          2.0.0
-
-#github:
-#  repo:           https://github.com/poole/hyde
+#version:          2.0.0
 
 gems: [jekyll-paginate]
+paginate: 5
 
-redcarpet:
-    extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "tables", "strikethrough", "superscript", "with_toc_data"]
-
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge

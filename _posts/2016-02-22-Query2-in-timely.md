@@ -22,7 +22,7 @@ First, we need to do the query planner job by hand. Some people like SQL syntax
 — you guessed it, I'm not one of them — but translating it to something
 more computer friendly is not simple.
 
-```SQL
+```sql
   SELECT SUBSTR(sourceIP, 1, 8), SUM(adRevenue)
     FROM uservisits
 GROUP BY SUBSTR(sourceIP, 1, 8)

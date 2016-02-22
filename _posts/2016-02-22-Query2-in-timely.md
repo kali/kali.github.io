@@ -144,8 +144,8 @@ fn main() {
 
         root.scoped::<u64, _, _>(move |builder| {
             [...]
-        };
-    }
+        });
+    })
 }
 ```
 

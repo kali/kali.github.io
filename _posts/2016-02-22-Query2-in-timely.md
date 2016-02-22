@@ -75,7 +75,7 @@ the application developer.
 A very efficient way to
 think about execution plan, obviously, to think in map and reduce terms.
 
-* Maps are a "pure" functions of an item in a stream. A map will be run on each
+* Maps are "pure" functions of an item in a stream. A map will be run on each
     item on the stream, producing one item of output at each turn, not having
     any side effect at all. Maps are the "nice guys" in map/reduce. They are
     very composable, scale naturally. They will often contains most of the

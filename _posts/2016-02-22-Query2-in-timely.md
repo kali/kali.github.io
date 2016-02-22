@@ -194,7 +194,7 @@ let uservisits = uservisits.map(|visit: (String, f32)| {
 ```
 
 Here again, nothing comes from timely. Bytes8 is a structure around an array
-of height bytes I have written for Query2. As a matter of fact, Map are so easy
+of eight bytes I have written for Query2. As a matter of fact, Map are so easy
 to deal with that I have not even bother putting this one in timely formalism.
 I could have done it, but what's the point really ? Iterators are so easy...
 

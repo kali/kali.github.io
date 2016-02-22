@@ -248,7 +248,7 @@ the resulting stream in `group` for our next step.
 `unary_notify` is "unary" in that it define an operator that has one input
 (the uservisits key/value tuples) and one output. It is "_notify" in that,
 as we are a reducer and not a map, we will need some access to the shared
-computation progress in order to know when have received everything that
+computation progress in order to know when we have received everything that
 belong to our shard of data. Access to this global state is why "timely" is
 called "timely": each record in the stream is tagged with a "time". Time
 is actually a complex thing in timely dataflow. Think about the black board
@@ -284,7 +284,7 @@ to guessing whatever `to_stream()` does and it's what the timely guys
 recommend anyway.
 
 Moving on to the "payload" logic, we update the state hashmap. The
-update_hashmap acts by inserting a new key or updating the value of an
+`update_hashmap` acts by inserting a new key or updating the value of an
 existing key using the additioner we provide.
 
 Second bit of logic is what to do when the notification occur: we will

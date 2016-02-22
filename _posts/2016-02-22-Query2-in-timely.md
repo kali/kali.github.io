@@ -7,7 +7,7 @@ title: Query2 in timely dataflow
 established that [timely-dataflow](http://github.com/frankmcsherry/timely-dataflow) 
 rocks. We have shown it
 was allowing us to crunch data with one order of magnitude cost-efficiency
-that redshift or Spark on EC2.
+that Redshift or Spark on EC2.
 
 Timely is great, but it can be a bit intimidating. It's lower-level than
 Spark, bringing us a bit to the Hadoop manual map/reduce era. So this week, we
@@ -260,18 +260,18 @@ In our example, it's quite simple. There is just one "epoch" we are interested
 in for the reduceByKey: we need to be notified when all the workers in the
 system are done with the input files.
 
-The `Exchange` is what will decide to which broker a record should be send:
+The `Exchange` is what will decide to which broker a record should be sent:
 we are returning a hash of the key from the pair. Timely will make sure all
 records with the same hash are going to the same worker.
 
 Next come a debug and audit name for our worker, and a vector of timestamps
 we know we will want to be notified at. We could use this to register our
 the required notification, except we don't know what to_stream() uses as
-timestamp. Fortunately, there are other way to register notifications.
+timestamp. Fortunately, there are other ways to register notifications.
 
 Finally, the last argument of unary_notify is the logic that the operator
 will run every time it gets a chance. It takes the form of a closure which
-allow the logic to make use of the input, output and notification bus, and,
+allows the logic to make use of the input, output and notification bus, and,
 by capture, the various variables the worker has declared
 as its state: more specifically, here, the `hashmap` variable.
 
@@ -306,7 +306,7 @@ implemented as follow (again, pseudo-code).
 
 The first map calls .len() on the HashMap, the second make an absurd constant
 key to bring all the partial counts to the same worker, which will sum to get
-the results.
+the result.
 
 So what I have done here was to move "up" the first of the count map as close
 as possible to the reduceByKey above, avoiding making a stream of HashMap and
@@ -345,7 +345,7 @@ And that's it.
 This executable is ready for the distributed mode, but the distribution
 itself is not
 covered: something or someone needs to copy the executable on each of the
-cluster nodes, provide it the list of its peers and start it. 
+cluster nodes, provide them the list of their peers and start them. 
 If you want to run a second time you need
 to go to each node and start the process again...
 For the ec2 tests, I used ansible scripts.
@@ -356,9 +356,9 @@ Of course, we are far from the elegant four lines of Spark, we had to do many
 things by hand including translating the logical query to a distributable
 executable plan. We produced a full screen with a good quantity of boilerplate,
 but we have a standalone executable that will crunch the data with an
-efficiency way higher than that of Spark or RedShift.
+efficiency way higher than that of Spark or Redshift.
 
-Building an equivalent of Spark or RedShift on top of timely is a daunting
+Building an equivalent of Spark or Redshift on top of timely is a daunting
 task. But there are intermediary objectives that could make sense: helpers and
 ready-to-use operators to make writing data processing task easier, daemons
 that would migrate executables to all the nodes, start them and manage

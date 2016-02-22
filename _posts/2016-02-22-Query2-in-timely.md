@@ -78,7 +78,7 @@ think about execution plan, obviously, to think in map and reduce terms.
 * Maps are "pure" functions of an item in a stream. A map will be run on each
     item on the stream, producing one item of output at each turn, not having
     any side effect at all. Maps are the "nice guys" in map/reduce. They are
-    very composable, scale naturally. They will often contains most of the
+    very composable, scale naturally. They will often contain most of the
     application logic code, but are not really interesting from a structural
     point of view.
 * Reduces, of course, are another story. They are operations that for instance:

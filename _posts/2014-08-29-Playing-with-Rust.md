@@ -6,11 +6,12 @@ title: Playing with Rust
 Why Rust
 --------
 
-
 Among various items, last spring at the developer conference, Apple announced the 
 release of a new language to succeed the venerable Objective C. As a Scala user, I was
 amazed at how similar the first Swift samples Apple shared with the world
 [looked familiar](https://leverich.github.io/swiftislikescala/).
+
+<!--more-->
 
 It's certainly not a coincidence. After years of being ostracized, functional programming
 makes a big come-back and industry acknowledges its benefits by making functional and imperative

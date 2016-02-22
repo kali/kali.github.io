@@ -16,7 +16,7 @@ timely-dataflow implementation.
 
 ![rusted gears]({{ site.baseurl }}/assets/gear-1127518_640.png)
 
----
+<!--more-->
 
 ## From pseudo-SQL to execution plan
 

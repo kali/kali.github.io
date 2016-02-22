@@ -7,7 +7,7 @@ Okay. So this post was supposed to be about running on a cluster. I promise
 we will come to that eventually, but this week I got a bit side-tracked.
 Serendipity happened! We will have to dive into Rust HashMaps characteristics.
 
----
+<!--more-->
 
 Where were we?
 

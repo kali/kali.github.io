@@ -5,6 +5,8 @@ title: Playing with Rust part 3
 
 Part 3! Trying a few other modern (or not so modern) languages.
 
+<!--more-->
+
 Yesterday, I embarrassed myself by showing my busy beaver to Felix Klock at the Paris Rust
 User Group, just to be told that rustc had a -O option... now the rust beaver is even one
 tad faster than the C version. At least this shows I managed to get the actual code right.

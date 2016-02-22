@@ -8,7 +8,7 @@ title: The Rust is in there
 
 Ok, I'm done. Promise.
 
----
+<!--more-->
 
 ## What in there could be librarized?
 

@@ -9,7 +9,7 @@ We are working on a simple query nicknamed Query2 and comparing
 our results to the
 [BigData benchmark](https://amplab.cs.berkeley.edu/benchmark/).
 
----
+<!--more-->
 
 ```SQL
   SELECT SUBSTR(sourceIP, 1, X), SUM(adRevenue)

@@ -5,6 +5,8 @@ title: Playing with Rust part 2
 
 Part 2 of my adventures with Rust and the busy beaver.
 
+<!--more-->
+
 Performance
 -----------
 

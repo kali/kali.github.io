@@ -12,6 +12,8 @@ I'll be doing in a few months — or even days. And it's the first time also whe
 freedom in relative financial comfort and just have to think, or not, about what to do next.
 To be honest, I find that both exhilarating and frightening.
 
+<!--more-->
+
 I've only been employed by two companies so far. The first one hired me as a summer intern before my scholarship was
 over in 1999, and I chose to come back to work there "for real" later. It was a small — 20 persons or so — development
 company that was working for bigger companies and institutions on a project by project basis.

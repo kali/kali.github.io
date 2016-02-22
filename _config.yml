@@ -2,7 +2,7 @@ markdown: kramdown
 highlighter: rouge
 syntax_highlighter: rouge
 
-excerpt_separator: ---
+excerpt_separator: <!--more-->
 
 # Permalinks
 permalink:        pretty

@@ -6,7 +6,7 @@ title: Chers, très chers Orange et Canal+
 Je viens de vivre, une fois de plus une expérience d'utilisateur exécrable sur
 des services que je paye pourtant relativement cher.
 
----
+<!--more-->
 
 <div style="float:right; width:200px; border: solid; margin: 20px; padding: 10px">
 <img src="/assets/union-jack.png" width="30px">

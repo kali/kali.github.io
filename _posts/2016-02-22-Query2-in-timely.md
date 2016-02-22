@@ -90,7 +90,7 @@ think about execution plan, obviously, to think in map and reduce terms.
     On the happy side, there is a small zoology of reduce pattern families.
 
 So basically, when processing data in map/reduce, you pick and configure a few
-reducers, shoves most of your application logic in the mapper, and let the
+reducers, shove most of your application logic in the mapper, and let the
 framework do it's magic. Which is more or less what we have just done with
 the pseudo-code pseudo-spark code above.
 
@@ -103,7 +103,7 @@ Query2. From SQL to stream (at least in my head) to translation to timely.
 
 I happened to follow a different mental path for the non-timely implementation.
 If you remember the previous posts, with less constraints to start with (a
-blank page) I manage to produce a slower implementation than the one
+blank page), I manage to produce a slower implementation than the one
 constrained by timely... even if it had only one reducer step.
 
 Distributing Reducers is more complicated than Mappers because we must deal

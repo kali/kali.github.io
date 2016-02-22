@@ -29,7 +29,7 @@ GROUP BY SUBSTR(sourceIP, 1, 8)
 ```
 
 What's not to like ? Eye-hurting capitalization convention, moronic SUBSTR
-repetition, complete lack of compositionality, absurd reading order.
+repetition, complete lack of composability, absurd reading order.
 
 Big, big sigh.
 

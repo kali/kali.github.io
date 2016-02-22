@@ -3,7 +3,9 @@ layout: post
 title: Query2 in timely dataflow
 ---
 
-Last week, we have established that timely-dataflow rocks. We have shown it
+[Last week]({%post_url 2016-02-15-Embrace-the-glow-cloud%}/), we have 
+established that [timely-dataflow](http://github.com/frankmcsherry/timely-dataflow) 
+rocks. We have shown it
 was allowing us to crunch data with one order of magnitude cost-efficiency
 that redshift or Spark on EC2.
 
@@ -11,6 +13,8 @@ Timely is great, but it can be a bit intimidating. It's lower-level than
 Spark, bringing us a bit to the Hadoop manual map/reduce era. So this week, we
 will take the time to translate step by step our good old Query 2 friend to its
 timely-dataflow implementation.
+
+![rusted gears]({{ site.baseurl }}/assets/gear-1127518_640.png)
 
 ## From pseudo-SQL to execution plan
 
@@ -361,3 +365,5 @@ that would migrate executables to all the nodes, start them and manage
 the peer list for instance.
 
 Not sure what's the next step is yet.
+
+{% include {{site.baseurl}}/BigDataSeries.md %}

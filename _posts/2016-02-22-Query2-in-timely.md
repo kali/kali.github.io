@@ -28,12 +28,12 @@ more computer friendly is not simple.
 GROUP BY SUBSTR(sourceIP, 1, 8)
 ```
 
-What's not to like ? Eye-hurting capitalization convention, moronic SUBSTR
+What's not to like? Eye-hurting capitalization convention, moronic SUBSTR
 repetition, complete lack of composability, absurd reading order.
 
 Big, big sigh.
 
-Anyway. What would it look like in Spark, or in fluent collection style ? (This
+Anyway. What would it look like in Spark, or in fluent collection style? (This
 is pseudo code)
 
 ```scala
@@ -86,7 +86,7 @@ think about execution plan, obviously, to think in map and reduce terms.
     * may "break" the item-to-item stream of data (because they need to
         accumulate some or all of its input before outputting something),
     * may need to know exhaustively something about some subset or all of the
-        dataset to produce a correct result
+        dataset to produce a correct result.
     On the happy side, there is a small zoology of reduce pattern families.
 
 So basically, when processing data in map/reduce, you pick and configure a few
@@ -196,7 +196,7 @@ let uservisits = uservisits.map(|visit: (String, f32)| {
 Here again, nothing comes from timely. Bytes8 is a structure around an array
 of eight bytes I have written for Query2. As a matter of fact, Map are so easy
 to deal with that I have not even bother putting this one in timely formalism.
-I could have done it, but what's the point really ? Iterators are so easy...
+I could have done it, but what's the point really? Iterators are so easy...
 
 A few more lines of preliminary:
 
@@ -293,7 +293,7 @@ we are doing half of the count. A strict implementation of reduceByKey would
 shove the whole HashMap in the pipe, but we know better.
 
 This is an instance of a Map being, again, the good guy.
-Remember the pseudo-spark implementation above ? It featured a
+Remember the pseudo-spark implementation above? It featured a
 `reduceByKey(...).count()`. So the stream between these two logical operators
 is a stream of disjoints HashMap. Count, on the other hand, could be
 implemented as follow (again, pseudo-code).

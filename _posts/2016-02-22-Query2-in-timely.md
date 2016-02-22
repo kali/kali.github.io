@@ -45,7 +45,7 @@ UserVisits.load_from(...)
     .count
 ```
 
-This tries less harder to be readable in natural language, but is a good step
+This tries less hard to be readable in natural language, but is a good step
 is a very nice step in the direction of actually doing something.
 
 To paraphrase it:

@@ -7,6 +7,8 @@ Okay. So this post was supposed to be about running on a cluster. I promise
 we will come to that eventually, but this week I got a bit side-tracked.
 Serendipity happened! We will have to dive into Rust HashMaps characteristics.
 
+---
+
 Where were we?
 
 We are still working on "Query2", a simple groupby/sum query over uservisits,

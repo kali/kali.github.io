@@ -3,15 +3,17 @@ layout: post
 title: Chers, très chers Orange et Canal+
 ---
 
+Je viens de vivre, une fois de plus une expérience d'utilisateur exécrable sur
+des services que je paye pourtant relativement cher.
+
+---
+
 <div style="float:right; width:200px; border: solid; margin: 20px; padding: 10px">
 <img src="/assets/union-jack.png" width="30px">
 This is basically a rant against Orange, the french ISP, and Canal+,
 content provider. They push their customers to use illegal services by
 making it impossible to use their paying service.
 </div>
-
-Je viens de vivre, une fois de plus une expérience d'utilisateur exécrable sur
-des services que je paye pourtant relativement cher.
 
 Je suis d'assez près le championnat de France de Rugby, dont l'élite joue le
 fameux TOP14. Né à Brive, étudiant à Toulouse, vivant à Paris, je suis tout à

@@ -2,6 +2,8 @@ markdown: kramdown
 highlighter: rouge
 syntax_highlighter: rouge
 
+excerpt_separator: ---
+
 # Permalinks
 permalink:        pretty
 
@@ -24,3 +26,5 @@ paginate: 5
 kramdown:
   input: GFM
   syntax_highlighter: rouge
+  hard_wrap: false
+

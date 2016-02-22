@@ -3,12 +3,12 @@ layout: post
 title: The Rust is in there
 ---
 
-<figure>
-<img src="/assets/X-Files-Computer.jpg" alt"This is not a rust file, Mulder." height="400px"/>
+<img src="/assets/X-Files-Computer.jpg" alt="This is not a rust file, Mulder." height="400px">
 <figcaption>This is not a rust file, Mulder.</figcaption>
-</figure>
 
 Ok, I'm done. Promise.
+
+---
 
 ## What in there could be librarized?
 

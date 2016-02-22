@@ -3,7 +3,7 @@ layout: post
 title: Awkward Zone
 ---
 
-<img src="/assets/tool-1076326_1920.jpg" alt"four wrenches" height="400px">
+<img src="/assets/tool-1076326_1920.jpg" alt="four wrenches" height="400px">
 
 ## Rust, BigData and my laptop
 
@@ -12,6 +12,8 @@ index building, logs processing, Wikipedia graph analysis...
 Not necessarily huge
 datasets, but often in the "awkward zone", where a scripting language show its
 limits, but firing up a 20-node cluster does not feel right.
+
+---
 
 Some things have changed since the early 2000s. Getting access to hundreds or
 thousands of computer for a few hours at an affordable rate was

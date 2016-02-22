@@ -3,7 +3,7 @@ layout: post
 title: Query2 in timely dataflow
 ---
 
-[Last week]({%post_url 2016-02-15-Embrace-the-glow-cloud%}/), we have 
+[Last week]({%post_url 2016-02-15-Embrace-the-glow-cloud%}), we have 
 established that [timely-dataflow](http://github.com/frankmcsherry/timely-dataflow) 
 rocks. We have shown it
 was allowing us to crunch data with one order of magnitude cost-efficiency
@@ -15,6 +15,8 @@ will take the time to translate step by step our good old Query 2 friend to its
 timely-dataflow implementation.
 
 ![rusted gears]({{ site.baseurl }}/assets/gear-1127518_640.png)
+
+---
 
 ## From pseudo-SQL to execution plan
 

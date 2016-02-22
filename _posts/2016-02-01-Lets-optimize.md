@@ -15,6 +15,8 @@ factor in data processing. With SSD and PCIe disks, all this has changed.
 Believe me, or re-run the bench and look at `top`, it's very obvious that we
 are now CPU-bound.
 
+---
+
 Another simple way to convince us about this is to check out at what speed we
 can read our 30GB data:
 

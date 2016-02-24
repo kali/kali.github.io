@@ -338,7 +338,7 @@ let _: Stream<_, ()> = group.unary_notify(Exchange::new(|_| 0u64),
 ```
 
 Exchange is now a constant function, the rest is similar: the input chunks
-contains numbers that are added to the worker-scoped `sum` variable. We
+contain numbers that are added to the worker-scoped `sum` variable. We
 register the notification in the input handler, as we know spamming it is
 tolerable. Once we get notified, we output the count on the console.
 

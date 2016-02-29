@@ -246,3 +246,7 @@ We learn something more here. Differential dataflow API gives us a
 glimpse at what a "relational oriented" API may look like if someone would 
 try to go for it: relational operators from differential, implemented over
 timely, without the differential part of it.
+
+I don't know for you, but I kind of like what it looks like.
+
+{% include {{site.baseurl}}/BigDataSeries.md %}

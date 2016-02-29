@@ -8,3 +8,4 @@ Rust and BigData series:
 1. [Hashes to hashes]({%post_url 2016-02-08-Hashes-to-hashes%})
 1. [Embrace the glow cloud]({%post_url 2016-02-15-Embrace-the-glow-cloud%})
 1. [Query2 in timely dataflow]({%post_url 2016-02-22-Query2-in-timely%})
+1. [Query2 in differential dataflow]({%post_url 2016-02-29-Query2-in-differential-dataflow%})

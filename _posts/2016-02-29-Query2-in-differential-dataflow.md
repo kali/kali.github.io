@@ -167,9 +167,9 @@ weight of — you guessed it — +1.
 count.inspect(move |record| println!("XXX {} XXX", (record.0).1));
 ```
 
-Finally, we display the result, or at least the relevant part of it: it's
-buried in two nested tuples: the full `rec` is actually `( (true, result), weight)`
-where true is the magic aggregation key we picked before, and weight is... +1.
+Finally, we display the result, or at least the relevant part of it: it is
+buried in two nested tuples: the full `record` is actually `( (true, result), weight)`
+where `true` is the magic aggregation key we picked before, and `weight` is... +1.
 
 The code feels kind of "right" in term of volume of boilerplate. It could still
 be a bit more compact, it would be nice to have a built-on count() operator,

@@ -43,6 +43,21 @@ result, right ? We'll try that.
 
 ## Query 2 in differential dataflow
 
+If you're joining us here, let's briefly recap the exercice: we try to perform
+the following aggregation query using various technologies in the nascent rust
+ecosystem.
+
+```sql
+  SELECT SUBSTR(sourceIP, 1, 8), SUM(adRevenue)
+    FROM uservisits
+GROUP BY SUBSTR(sourceIP, 1, 8)
+```
+
+We will compute the full result in memory, because it fits, but merely display
+the count of records to check what we have done.
+
+So this week, we will play with differential dataflow.
+
 The code is [here](https://github.com/kali/dazone/blob/master/src/bin/query2_diff-dd.rs).
 Timely version was [here](https://github.com/kali/dazone/blob/master/src/bin/query2_timely.rs).
 
@@ -91,40 +106,55 @@ differential protocol. It wraps our input stream.
 
 ```rust
 let group: Collection<_, (Bytes8, SaneF32)> = 
-    collections.group(|_, vs, o| {
-        let v: f32 = vs
-            .map(|(sane, weight): 
-                (&SaneF32, i32)| sane.0 * weight as f32)
+    collections.group(|_key, values, output| {
+        let v: f32 = values
+            .map(|(sane, weight): (&SaneF32, i32)| 
+                sane.0 * weight as f32)
             .sum();
-        o.push((SaneF32(v), 1));
+        output.push((SaneF32(v), 1));
     });
 ```
 
 Then we implement the Query2 groupby with a single group call on
 collection. It expects the datum to be in a (K,V) form, and gives
 the caller a chance to specify how the values for a given key should be
-aggregated. This aggregation has to take into account the weight: we are
-dealing in differences here. If a visit disappear from the input, its weight
+aggregated. This aggregator is a closure in our case. It will be called
+once or more times for each different key, and will be passed the
+key itself, a list of values to aggregate, and an output handler to push the
+result to.
+
+This aggregator has to take into account the weight: we are
+dealing in differences here. So the `values` iterator does not contain raw
+values, but pairs of value and weight (+1 or -1).
+
+If a visit disappear from the input, its weight
 would be -1, and it revenue should be subtracted from the final result: 
-multiplying the value by the weight will just do the right thing. Of course,
+multiplying the value by the weight will just do the right thing.
+
+Of course,
 our input only adding stuff: all records have a weight of +1 so this
 is basically cosmetic. Once we have summed these differences, we push the 
 result, with a weight of +1 to our output (using again then sane f32
 wrapper).
 
+The group() method return a `Collection` handle that will let us chain other
+operators on our stream of data.
+In our case, after the group operator from the pseudo-sql query, we plug in the
+count operator that we use to check the result:
+
 ```rust
 let count: Collection<_, (bool, u32)> =
     group.map(|(_, _): (Bytes8, SaneF32)| { (true, 1) });
 
-let count: Collection<_, (bool, i32)> = count.group(|_, vs, o| {
-    let c: i32 = vs
-        .map(|(c, weight): (&u32, i32)| *c as i32 * weight)
+let count: Collection<_, (bool, i32)> = count.group(|_, values, output| {
+    let count: i32 = values
+        .map(|(count, weight): (&u32, i32)| *count as i32 * weight)
         .sum();
-    o.push((c, 1));
+    output.push((count, 1));
 });
 ```
 
-Next comes the count implementation: differential dataflow does not
+Differential dataflow does not
 have a built-in `count()`, but as we have seen in the previous post, a count
 can be implemented by mapping records to a single key with a value of 1, and 
 summing these 1s values. I use `true` as the magical single key, and perform
@@ -134,10 +164,12 @@ wanted added by the weight — probably always +1— then push the result with a
 weight of — you guessed it — +1.
 
 ```rust
-count.inspect(move |rec| println!("XXX {} XXX", (rec.0).1));
+count.inspect(move |record| println!("XXX {} XXX", (record.0).1));
 ```
 
-Finally, we display the result.
+Finally, we display the result, or at least the relevant part of it: it's
+buried in two nested tuples: the full `rec` is actually `( (true, result), weight)`
+where true is the magic aggregation key we picked before, and weight is... +1.
 
 The code feels kind of "right" in term of volume of boilerplate. It could still
 be a bit more compact, it would be nice to have a built-on count() operator,

@@ -11,17 +11,18 @@ week, we'll have a look at what it brings to the table.
 
 ## Introducing differential dataflow
 
-The previous post gave us an insight of what kind of development work is
+The [previous post]({%post_url 2016-02-22-Query2-in-timely %}) gave us
+an insight of what kind of development work is
 involved in translating relational operators to a timely-dataflow
 implementation. Let's just say it has a distinct taste of
-pre-pig-pre-hive-all-by-hand Hadoop MapReduce. But that's fine. It's what it's
-meant to be. Low-level routines for higher-level libraries.
+pre-pig-pre-hive-pre-spark-all-by-hand Hadoop MapReduce. But that's fine. 
+It's what it's meant to be. Low-level routines for higher-level libraries.
 
-Differential dataflow, is one of these less generic, more specialized and
+Differential dataflow is one of these more specialized and
 higher level library. At its core, it proposes a radical approach to the
 "lambda architecture" problem.
 The idea of lambda architecture is to build data systems that
-can provide seamlessly real-time dashboards and historical data.
+provide seamlessly real-time dashboards and historical data.
 People have managed this by either combining two different systems, or
 choosing one and hammering it until it fits in the other hole.
 
@@ -71,13 +72,14 @@ for visit in uservisits {
 }
 ```
 
-This is a pair of a datum and weight (1), the datum itself is a key 
+This is a pair of a datum and a weight (+1), the datum itself is made of a key 
 (an instance of Bytes8) and a value (the sane f32). `input.send()` adds the
 timely timestamp behind the scene, and we are pushing everything in one big 
 batch.
 
-The graph itself is defined in the `root::scoped` call. It returns a handle to
-an input that we use to push data into the graph.
+The graph itself is defined in the `root::scoped` call. The handle it returns
+is the `input` we have just used to push data into the graph. This input is
+itself created inside the scope in the first of the following two lines:
 
 ```rust
 let (input, stream) = builder.new_input::<((Bytes8, SaneF32), i32)>();
@@ -85,8 +87,7 @@ let collection = Collection::new(stream);
 ```
 
 `Collection` is the differential dataflow struct that supports the 
-differential protocol and provides the relational operators, so we build one
-around our stream of data.
+differential protocol. It wraps our input stream.
 
 ```rust
 let group: Collection<_, (Bytes8, SaneF32)> = 
@@ -104,11 +105,11 @@ collection. It expects the datum to be in a (K,V) form, and gives
 the caller a chance to specify how the values for a given key should be
 aggregated. This aggregation has to take into account the weight: we are
 dealing in differences here. If a visit disappear from the input, its weight
-would be -1, and it revenue should be subtracted to the final result: 
-multiplying the value by the weight will do the right thing. Of course,
-our input only add stuff, we are only adding data with a weight of +1 so this
+would be -1, and it revenue should be subtracted from the final result: 
+multiplying the value by the weight will just do the right thing. Of course,
+our input only adding stuff: all records have a weight of +1 so this
 is basically cosmetic. Once we have summed these differences, we push the 
-result, with a weight of +1 to our output (wrapping again our f32 in the sane
+result, with a weight of +1 to our output (using again then sane f32
 wrapper).
 
 ```rust
@@ -123,12 +124,12 @@ let count: Collection<_, (bool, i32)> = count.group(|_, vs, o| {
 });
 ```
 
-Next comes the `count` implementation: differential dataflow does not
+Next comes the count implementation: differential dataflow does not
 have a built-in `count()`, but as we have seen in the previous post, a count
 can be implemented by mapping records to a single key with a value of 1, and 
-summing the values. I use `true` as the magical single key, and perform the 
-partial sum of the 1s values
-in a very similar way than in the group operation, multiplying whatever I
+summing these 1s values. I use `true` as the magical single key, and perform
+the partial sum of the 1s values
+in a very similar fashion than in the group operation, multiplying whatever I
 wanted added by the weight — probably always +1— then push the result with a 
 weight of — you guessed it — +1.
 

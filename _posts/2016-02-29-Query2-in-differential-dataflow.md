@@ -132,7 +132,7 @@ would be -1, and it revenue should be subtracted from the final result:
 multiplying the value by the weight will just do the right thing.
 
 Of course,
-our input only adding stuff: all records have a weight of +1 so this
+our input only adds stuff: all records have a weight of +1 so this
 is basically cosmetic. Once we have summed these differences, we push the 
 result, with a weight of +1 to our output (using again then sane f32
 wrapper).
